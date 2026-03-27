@@ -47,6 +47,41 @@
         const powerups = [];
         let powerupTimer = 0;
         let difficulty = 1;
+        const particles = [];
+
+        function createParticles(x, y, color, count) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 0.5) * 6,
+                    life: 30 + Math.random() * 20,
+                    color: color,
+                    size: 3 + Math.random() * 4
+                });
+            }
+        }
+
+        function updateParticles() {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life--;
+                p.size *= 0.95;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+        }
+
+        function drawParticles() {
+            particles.forEach(p => {
+                ctx.globalAlpha = p.life / 50;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            });
+            ctx.globalAlpha = 1;
+        }
 
         function spawnCoin() {
             coins.push({
@@ -119,6 +154,8 @@
                 if (shieldTimer <= 0) hasShield = false;
             }
 
+            updateParticles();
+
             for (let i = enemies.length - 1; i >= 0; i--) {
                 const e = enemies[i];
                 e.x += e.vx;
@@ -129,7 +166,10 @@
                 }
                 if (player.x < e.x + e.w && player.x + player.w > e.x &&
                     player.y < e.y + e.h && player.y + player.h > e.y) {
-                    lives--;
+                    if (!hasShield) {
+                        lives--;
+                        createParticles(player.x + player.w/2, player.y + player.h/2, '#ff4444', 15);
+                    }
                     enemies.splice(i, 1);
                     if (lives <= 0) {
                         gameOver = true;
@@ -142,7 +182,19 @@
                 if (player.x < c.x + c.w && player.x + player.w > c.x &&
                     player.y < c.y + c.h && player.y + player.h > c.y) {
                     score++;
+                    createParticles(c.x + c.w/2, c.y + c.h/2, '#ffd700', 10);
                     coins.splice(i, 1);
+                }
+            }
+
+            for (let i = powerups.length - 1; i >= 0; i--) {
+                const p = powerups[i];
+                if (player.x < p.x + p.w && player.x + player.w > p.x &&
+                    player.y < p.y + p.h && player.y + player.h > p.y) {
+                    hasShield = true;
+                    shieldTimer = 300;
+                    createParticles(p.x + p.w/2, p.y + p.h/2, '#00ff88', 15);
+                    powerups.splice(i, 1);
                 }
             }
         }
@@ -168,6 +220,13 @@
             enemies.forEach(e => {
                 ctx.fillStyle = e.color;
                 ctx.fillRect(e.x, e.y, e.w, e.h);
+            });
+        }
+
+        function drawPowerups() {
+            powerups.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.w, p.h);
             });
         }
 
@@ -219,6 +278,8 @@
             drawPlayer();
             drawCoins();
             drawEnemies();
+            drawPowerups();
+            drawParticles();
             drawScore();
             drawLives();
             if (gameOver) {
