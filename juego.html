@@ -40,6 +40,8 @@
         const enemySize = 25;
         let enemyTimer = 0;
         let score = 0;
+        let gameOver = false;
+        let lives = 3;
 
         function spawnCoin() {
             coins.push({
@@ -99,8 +101,11 @@
                 }
                 if (player.x < e.x + e.w && player.x + player.w > e.x &&
                     player.y < e.y + e.h && player.y + player.h > e.y) {
-                    score = Math.max(0, score - 1);
+                    lives--;
                     enemies.splice(i, 1);
+                    if (lives <= 0) {
+                        gameOver = true;
+                    }
                 }
             }
 
@@ -144,6 +149,42 @@
             ctx.fillText('Score: ' + score, 10, 30);
         }
 
+        function drawLives() {
+            ctx.fillStyle = '#ff6b6b';
+            ctx.font = '20px Arial';
+            ctx.fillText('Lives: ' + lives, 10, 60);
+        }
+
+        function drawGameOver() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#fff';
+            ctx.font = '40px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 20);
+            ctx.font = '20px Arial';
+            ctx.fillText('Final Score: ' + score, canvas.width / 2, canvas.height / 2 + 20);
+            ctx.fillText('Press SPACE to restart', canvas.width / 2, canvas.height / 2 + 60);
+            ctx.textAlign = 'left';
+        }
+
+        function restart() {
+            player.x = 280;
+            player.y = 180;
+            score = 0;
+            lives = 3;
+            coins.length = 0;
+            enemies.length = 0;
+            gameOver = false;
+            spawnCoin();
+        }
+
+        window.addEventListener('keydown', e => {
+            if (gameOver && e.key === ' ') {
+                restart();
+            }
+        });
+
         function loop() {
             update();
             drawBackground();
@@ -151,7 +192,12 @@
             drawCoins();
             drawEnemies();
             drawScore();
-            requestAnimationFrame(loop);
+            drawLives();
+            if (gameOver) {
+                drawGameOver();
+            } else {
+                requestAnimationFrame(loop);
+            }
         }
 
         loop();
