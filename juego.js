@@ -1,30 +1,21 @@
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
-const player = {
-    x: 280,
-    y: 180,
-    w: 30,
-    h: 30,
-    color: '#00d4ff',
-    speed: 4
-};
+const player = { ...CONFIG.player };
 
 const coins = [];
-const coinSize = 15;
 let coinTimer = 0;
 
 const enemies = [];
-const enemySize = 25;
 let enemyTimer = 0;
 let score = 0;
 let gameOver = false;
-let lives = 3;
+let lives = CONFIG.initialLives;
 let hasShield = false;
 let shieldTimer = 0;
 const powerups = [];
 let powerupTimer = 0;
-let difficulty = 1;
+let difficulty = CONFIG.difficulty.base;
 const particles = [];
 
 function createParticles(x, y, color, count) {
@@ -63,11 +54,11 @@ function drawParticles() {
 
 function spawnCoin() {
     coins.push({
-        x: Math.random() * (canvas.width - coinSize),
-        y: Math.random() * (canvas.height - coinSize),
-        w: coinSize,
-        h: coinSize,
-        color: '#ffd700'
+        x: Math.random() * (canvas.width - CONFIG.coin.size),
+        y: Math.random() * (canvas.height - CONFIG.coin.size),
+        w: CONFIG.coin.size,
+        h: CONFIG.coin.size,
+        color: CONFIG.coin.color
     });
 }
 
@@ -76,21 +67,23 @@ spawnCoin();
 function spawnEnemy() {
     const side = Math.floor(Math.random() * 4);
     const speed = difficulty;
+    const size = CONFIG.enemy.size;
     let x, y, vx, vy;
-    if (side === 0) { x = Math.random() * canvas.width; y = -enemySize; vx = (Math.random() - 0.5) * 2 * speed; vy = Math.random() * 2 + speed; }
+    if (side === 0) { x = Math.random() * canvas.width; y = -size; vx = (Math.random() - 0.5) * 2 * speed; vy = Math.random() * 2 + speed; }
     else if (side === 1) { x = canvas.width; y = Math.random() * canvas.height; vx = -(Math.random() * 2 + speed); vy = (Math.random() - 0.5) * 2 * speed; }
     else if (side === 2) { x = Math.random() * canvas.width; y = canvas.height; vx = (Math.random() - 0.5) * 2 * speed; vy = -(Math.random() * 2 + speed); }
-    else { x = -enemySize; y = Math.random() * canvas.height; vx = Math.random() * 2 + speed; vy = (Math.random() - 0.5) * 2 * speed; }
-    enemies.push({ x, y, w: enemySize, h: enemySize, vx, vy, color: '#ff4444' });
+    else { x = -size; y = Math.random() * canvas.height; vx = Math.random() * 2 + speed; vy = (Math.random() - 0.5) * 2 * speed; }
+    enemies.push({ x, y, w: size, h: size, vx, vy, color: CONFIG.enemy.color });
 }
 
 function spawnPowerup() {
+    const size = CONFIG.powerup.size;
     powerups.push({
-        x: Math.random() * (canvas.width - 20),
-        y: Math.random() * (canvas.height - 20),
-        w: 20,
-        h: 20,
-        color: '#00ff88'
+        x: Math.random() * (canvas.width - size),
+        y: Math.random() * (canvas.height - size),
+        w: size,
+        h: size,
+        color: CONFIG.powerup.color
     });
 }
 
@@ -109,20 +102,20 @@ function update() {
     player.y = Math.max(0, Math.min(canvas.height - player.h, player.y));
 
     coinTimer++;
-    if (coinTimer > 120) {
+    if (coinTimer > CONFIG.coin.spawnInterval) {
         spawnCoin();
         coinTimer = 0;
     }
 
     enemyTimer++;
-    difficulty = 1 + Math.floor(score / 5) * 0.2;
-    if (enemyTimer > Math.max(30, 90 - score * 2)) {
+    difficulty = CONFIG.difficulty.base + Math.floor(score / CONFIG.difficulty.scorePerLevel) * CONFIG.difficulty.increment;
+    if (enemyTimer > Math.max(CONFIG.enemy.minSpawnInterval, CONFIG.enemy.baseSpawnInterval - score * 2)) {
         spawnEnemy();
         enemyTimer = 0;
     }
 
     powerupTimer++;
-    if (powerupTimer > 600) {
+    if (powerupTimer > CONFIG.powerup.spawnInterval) {
         spawnPowerup();
         powerupTimer = 0;
     }
@@ -146,7 +139,7 @@ function update() {
             player.y < e.y + e.h && player.y + player.h > e.y) {
             if (!hasShield) {
                 lives--;
-                createParticles(player.x + player.w/2, player.y + player.h/2, '#ff4444', 15);
+                createParticles(player.x + player.w/2, player.y + player.h/2, CONFIG.enemy.color, CONFIG.particle.defaultCount + 5);
             }
             enemies.splice(i, 1);
             if (lives <= 0) {
@@ -160,7 +153,7 @@ function update() {
         if (player.x < c.x + c.w && player.x + player.w > c.x &&
             player.y < c.y + c.h && player.y + player.h > c.y) {
             score++;
-            createParticles(c.x + c.w/2, c.y + c.h/2, '#ffd700', 10);
+            createParticles(c.x + c.w/2, c.y + c.h/2, CONFIG.coin.color, CONFIG.particle.defaultCount);
             coins.splice(i, 1);
         }
     }
@@ -170,15 +163,15 @@ function update() {
         if (player.x < p.x + p.w && player.x + player.w > p.x &&
             player.y < p.y + p.h && player.y + player.h > p.y) {
             hasShield = true;
-            shieldTimer = 300;
-            createParticles(p.x + p.w/2, p.y + p.h/2, '#00ff88', 15);
+            shieldTimer = CONFIG.powerup.shieldDuration;
+            createParticles(p.x + p.w/2, p.y + p.h/2, CONFIG.powerup.color, CONFIG.particle.defaultCount + 5);
             powerups.splice(i, 1);
         }
     }
 }
 
 function drawBackground() {
-    ctx.fillStyle = '#1a1a2e';
+    ctx.fillStyle = CONFIG.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -234,10 +227,10 @@ function drawGameOver() {
 }
 
 function restart() {
-    player.x = 280;
-    player.y = 180;
+    player.x = CONFIG.player.x;
+    player.y = CONFIG.player.y;
     score = 0;
-    lives = 3;
+    lives = CONFIG.initialLives;
     coins.length = 0;
     enemies.length = 0;
     gameOver = false;
