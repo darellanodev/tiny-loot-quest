@@ -1,3 +1,9 @@
+import { Player } from './js/classes/Player.js';
+import { Coin } from './js/classes/Coin.js';
+import { Enemy } from './js/classes/Enemy.js';
+import { Powerup } from './js/classes/Powerup.js';
+import { Particle } from './js/classes/Particle.js';
+
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
