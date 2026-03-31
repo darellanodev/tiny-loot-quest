@@ -32,3 +32,9 @@ Open `index.html` in your browser.
 - Avoid red enemies coming from all sides
 - Pick up green power-ups for a temporary shield
 - The game gets harder as your score increases
+
+### Credits
+
+- Some art used from:
+
+<https://pixelfight.itch.io/16x16-retro-pixel-character-template>
