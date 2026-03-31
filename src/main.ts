@@ -1,11 +1,13 @@
-import { Player } from './js/classes/Player.js';
-import { Coin } from './js/classes/Coin.js';
-import { Enemy } from './js/classes/Enemy.js';
-import { Powerup } from './js/classes/Powerup.js';
-import { Particle } from './js/classes/Particle.js';
+import './style.css';
+import { CONFIG } from './config.js';
+import { Player } from './classes/Player.js';
+import { Coin } from './classes/Coin.js';
+import { Enemy } from './classes/Enemy.js';
+import { Powerup } from './classes/Powerup.js';
+import { Particle } from './classes/Particle.js';
 
-const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('game') as HTMLCanvasElement;
+const ctx = canvas.getContext('2d')!;
 
 const player = new Player(CONFIG.player);
 let score = 0;
@@ -14,42 +16,42 @@ let lives = CONFIG.initialLives;
 let hasShield = false;
 let shieldTimer = 0;
 
-const coins = [];
-const enemies = [];
-const powerups = [];
-const particles = [];
+const coins: Coin[] = [];
+const enemies: Enemy[] = [];
+const powerups: Powerup[] = [];
+const particles: Particle[] = [];
 
 let coinTimer = 0;
 let enemyTimer = 0;
 let powerupTimer = 0;
 let difficulty = CONFIG.difficulty.base;
 
-const keys = {};
+const keys: Record<string, boolean> = {};
 
 window.addEventListener('keydown', e => keys[e.key] = true);
 window.addEventListener('keyup', e => keys[e.key] = false);
 
-function createParticles(x, y, color, count) {
+function createParticles(x: number, y: number, color: string, count: number): void {
     for (let i = 0; i < count; i++) {
         particles.push(new Particle(x, y, color));
     }
 }
 
-function spawnCoin() {
+function spawnCoin(): void {
     coins.push(new Coin(canvas));
 }
 
 spawnCoin();
 
-function spawnEnemy() {
+function spawnEnemy(): void {
     enemies.push(new Enemy(canvas, difficulty));
 }
 
-function spawnPowerup() {
+function spawnPowerup(): void {
     powerups.push(new Powerup(canvas));
 }
 
-function update() {
+function update(): void {
     player.move(keys, canvas);
 
     coinTimer++;
@@ -117,12 +119,12 @@ function update() {
     }
 }
 
-function drawBackground() {
+function drawBackground(): void {
     ctx.fillStyle = CONFIG.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-function drawPlayer() {
+function drawPlayer(): void {
     player.draw(ctx);
     if (hasShield) {
         ctx.strokeStyle = CONFIG.powerup.color;
@@ -131,35 +133,35 @@ function drawPlayer() {
     }
 }
 
-function drawCoins() {
+function drawCoins(): void {
     coins.forEach(c => c.draw(ctx));
 }
 
-function drawEnemies() {
+function drawEnemies(): void {
     enemies.forEach(e => e.draw(ctx));
 }
 
-function drawPowerups() {
+function drawPowerups(): void {
     powerups.forEach(p => p.draw(ctx));
 }
 
-function drawParticles() {
+function drawParticles(): void {
     particles.forEach(p => p.draw(ctx));
 }
 
-function drawScore() {
+function drawScore(): void {
     ctx.fillStyle = '#fff';
     ctx.font = '20px Arial';
     ctx.fillText('Score: ' + score, 10, 30);
 }
 
-function drawLives() {
+function drawLives(): void {
     ctx.fillStyle = '#ff6b6b';
     ctx.font = '20px Arial';
     ctx.fillText('Lives: ' + lives, 10, 60);
 }
 
-function drawGameOver() {
+function drawGameOver(): void {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#fff';
@@ -172,7 +174,7 @@ function drawGameOver() {
     ctx.textAlign = 'left';
 }
 
-function restart() {
+function restart(): void {
     player.reset(CONFIG.player);
     score = 0;
     lives = CONFIG.initialLives;
@@ -192,7 +194,7 @@ window.addEventListener('keydown', e => {
     }
 });
 
-function loop() {
+function loop(): void {
     update();
     drawBackground();
     drawPlayer();

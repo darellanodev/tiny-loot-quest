@@ -1,11 +1,15 @@
 import { Entity } from './Entity.js';
+import { CONFIG } from '../config.js';
 
 export class Enemy extends Entity {
-    constructor(canvas, difficulty) {
+    vx: number;
+    vy: number;
+
+    constructor(canvas: HTMLCanvasElement, difficulty: number) {
         const size = CONFIG.enemy.size;
         const speed = difficulty;
         const side = Math.floor(Math.random() * 4);
-        let x, y, vx, vy;
+        let x: number, y: number, vx: number, vy: number;
 
         if (side === 0) {
             x = Math.random() * canvas.width;
@@ -34,12 +38,12 @@ export class Enemy extends Entity {
         this.vy = vy;
     }
 
-    update(canvas) {
+    update(_canvas: HTMLCanvasElement): void {
         this.x += this.vx;
         this.y += this.vy;
     }
 
-    isOutOfBounds(canvas) {
+    isOutOfBounds(canvas: HTMLCanvasElement): boolean {
         return this.x < -50 || this.x > canvas.width + 50 ||
                this.y < -50 || this.y > canvas.height + 50;
     }
