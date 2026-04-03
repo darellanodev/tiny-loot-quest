@@ -9,6 +9,7 @@ import { ImageManager } from "./classes/ImageManager.js";
 
 const canvas = document.getElementById("game") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
+ctx.imageSmoothingEnabled = false;
 
 const imageManager = new ImageManager();
 const imageCharacterURL = new URL(`./images/character.png`, import.meta.url).href;
