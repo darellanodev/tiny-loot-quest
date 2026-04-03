@@ -10,6 +10,9 @@ export class Coin extends Entity {
     currentFrame: number;
     frameTimer: number;
     frameDelay: number;
+    waitTimer: number;
+    waitDelay: number;
+    isAnimating: boolean;
 
     constructor(canvas: HTMLCanvasElement, sprite: HTMLImageElement) {
         const size = CONFIG.coin.size;
@@ -27,14 +30,29 @@ export class Coin extends Entity {
         this.sheetRows = 1;
         this.currentFrame = 0;
         this.frameTimer = 0;
-        this.frameDelay = 8;
+        this.frameDelay = 30;
+        this.waitTimer = 0;
+        this.waitDelay = 90;
+        this.isAnimating = true;
     }
 
     update(): void {
-        this.frameTimer++;
-        if (this.frameTimer >= this.frameDelay) {
-            this.frameTimer = 0;
-            this.currentFrame = (this.currentFrame + 1) % this.sheetColumns;
+        if (this.isAnimating) {
+            this.frameTimer++;
+            if (this.frameTimer >= this.frameDelay) {
+                this.frameTimer = 0;
+                this.currentFrame++;
+                if (this.currentFrame >= this.sheetColumns) {
+                    this.currentFrame = 0;
+                    this.isAnimating = false;
+                }
+            }
+        } else {
+            this.waitTimer++;
+            if (this.waitTimer >= this.waitDelay) {
+                this.waitTimer = 0;
+                this.isAnimating = true;
+            }
         }
     }
 
