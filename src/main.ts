@@ -61,16 +61,16 @@ function spawnPowerup(): void {
   powerups.push(new Powerup(canvas));
 }
 
-function update(): void {
-  player.move(keys, canvas);
+function update(delta: number): void {
+  player.move(keys, canvas, delta);
 
-  coinTimer++;
+  coinTimer += delta;
   if (coinTimer > CONFIG.coin.spawnInterval) {
     spawnCoin();
     coinTimer = 0;
   }
 
-  enemyTimer++;
+  enemyTimer += delta;
   difficulty =
     CONFIG.difficulty.base +
     Math.floor(score / CONFIG.difficulty.scorePerLevel) *
@@ -86,24 +86,24 @@ function update(): void {
     enemyTimer = 0;
   }
 
-  powerupTimer++;
+  powerupTimer += delta;
   if (powerupTimer > CONFIG.powerup.spawnInterval) {
     spawnPowerup();
     powerupTimer = 0;
   }
 
   if (hasShield) {
-    shieldTimer--;
+    shieldTimer -= delta;
     if (shieldTimer <= 0) hasShield = false;
   }
 
   for (let i = particles.length - 1; i >= 0; i--) {
-    particles[i].update();
+    particles[i].update(delta);
     if (particles[i].isDead()) particles.splice(i, 1);
   }
 
   for (let i = enemies.length - 1; i >= 0; i--) {
-    enemies[i].update(canvas);
+    enemies[i].update(canvas, delta);
     if (enemies[i].isOutOfBounds(canvas)) {
       enemies.splice(i, 1);
       continue;
@@ -236,8 +236,13 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-function loop(): void {
-  update();
+let lastTime = performance.now();
+
+function loop(currentTime: number): void {
+  const delta = (currentTime - lastTime) / 16.667;
+  lastTime = currentTime;
+
+  update(delta);
   drawBackground();
   drawPlayer();
   drawCoins();
@@ -253,4 +258,4 @@ function loop(): void {
   }
 }
 
-loop();
+loop(performance.now());

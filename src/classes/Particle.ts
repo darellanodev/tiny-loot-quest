@@ -17,10 +17,10 @@ export class Particle {
         this.size = 3 + Math.random() * 4;
     }
 
-    update(): void {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.life--;
+    update(delta: number): void {
+        this.x += this.vx * delta;
+        this.y += this.vy * delta;
+        this.life -= delta;
         this.size *= 0.95;
     }
 

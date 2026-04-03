@@ -29,26 +29,26 @@ export class Player extends Entity {
   direction: number; // 0 down, 1 up, 2 right, 3 left
   isMoving: boolean;
 
-  move(keys: Record<string, boolean>, canvas: HTMLCanvasElement): void {
+  move(keys: Record<string, boolean>, canvas: HTMLCanvasElement, delta: number): void {
     this.isMoving = false;
     let moved = false;
     if (keys["ArrowUp"] || keys["w"]) {
-      this.y -= this.speed;
+      this.y -= this.speed * delta;
       this.direction = 1; // up
       moved = true;
     }
     if (keys["ArrowDown"] || keys["s"]) {
-      this.y += this.speed;
+      this.y += this.speed * delta;
       this.direction = 0; // down
       moved = true;
     }
     if (keys["ArrowLeft"] || keys["a"]) {
-      this.x -= this.speed;
+      this.x -= this.speed * delta;
       this.direction = 2; // left
       moved = true;
     }
     if (keys["ArrowRight"] || keys["d"]) {
-      this.x += this.speed;
+      this.x += this.speed * delta;
       this.direction = 3; // right
       moved = true;
     }

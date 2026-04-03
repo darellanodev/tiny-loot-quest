@@ -38,9 +38,9 @@ export class Enemy extends Entity {
         this.vy = vy;
     }
 
-    update(_canvas: HTMLCanvasElement): void {
-        this.x += this.vx;
-        this.y += this.vy;
+    update(_canvas: HTMLCanvasElement, delta: number): void {
+        this.x += this.vx * delta;
+        this.y += this.vy * delta;
     }
 
     isOutOfBounds(canvas: HTMLCanvasElement): boolean {
