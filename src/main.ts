@@ -13,6 +13,8 @@ const ctx = canvas.getContext("2d")!;
 const imageManager = new ImageManager();
 const imageCharacterURL = new URL(`./images/character.png`, import.meta.url).href;
 const characterImage = await imageManager.load(imageCharacterURL);
+const imageSkeletonURL = new URL(`./images/skeleton.png`, import.meta.url).href;
+const skeletonImage = await imageManager.load(imageSkeletonURL);
 
 const player = new Player(CONFIG.player, characterImage);
 let score = 0;
@@ -54,7 +56,7 @@ function spawnCoin(): void {
 spawnCoin();
 
 function spawnEnemy(): void {
-  enemies.push(new Enemy(canvas, difficulty));
+  enemies.push(new Enemy(canvas, difficulty, skeletonImage));
 }
 
 function spawnPowerup(): void {
