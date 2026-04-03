@@ -15,6 +15,8 @@ const imageCharacterURL = new URL(`./images/character.png`, import.meta.url).hre
 const characterImage = await imageManager.load(imageCharacterURL);
 const imageSkeletonURL = new URL(`./images/skeleton.png`, import.meta.url).href;
 const skeletonImage = await imageManager.load(imageSkeletonURL);
+const imageCoinURL = new URL(`./images/coin.png`, import.meta.url).href;
+const coinImage = await imageManager.load(imageCoinURL);
 
 const player = new Player(CONFIG.player, characterImage);
 let score = 0;
@@ -51,7 +53,7 @@ function createParticles(
 }
 
 function spawnCoin(): void {
-  coins.push(new Coin(canvas));
+  coins.push(new Coin(canvas, coinImage));
 }
 
 spawnCoin();
@@ -125,6 +127,7 @@ function update(delta: number): void {
   }
 
   for (let i = coins.length - 1; i >= 0; i--) {
+    coins[i].update();
     if (player.collidesWith(coins[i])) {
       score++;
       createParticles(
