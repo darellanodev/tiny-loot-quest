@@ -20,9 +20,10 @@
     },
     "peacock.color": "#1a3323",
     "cSpell.words": [
+        "hitbox",
         "Powerup",
         "powerups",
-        "WASD",
-        "spritesheet"
+        "spritesheet",
+        "WASD"
     ]
 }
