@@ -75,7 +75,7 @@ export const CONFIG: Config = {
     },
     coin: { size: 11, color: '#ffd700', spawnInterval: 120 },
     enemy: { size: 16, hitboxWidth: 8, color: '#ff4444', baseSpawnInterval: 90, minSpawnInterval: 30 },
-    powerup: { size: 20, color: '#00ff88', spawnInterval: 600, shieldDuration: 300 },
+    powerup: { size: 16, color: '#00ff88', spawnInterval: 600, shieldDuration: 300 },
     particle: { defaultCount: 10 },
     initialLives: 3,
     difficulty: { base: 0.3, increment: 0.05, scorePerLevel: 5 }

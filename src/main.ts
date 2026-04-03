@@ -18,6 +18,8 @@ const imageSkeletonURL = new URL(`./images/skeleton.png`, import.meta.url).href;
 const skeletonImage = await imageManager.load(imageSkeletonURL);
 const imageCoinURL = new URL(`./images/coin.png`, import.meta.url).href;
 const coinImage = await imageManager.load(imageCoinURL);
+const imagePowerupURL = new URL(`./images/powerup.png`, import.meta.url).href;
+const powerupImage = await imageManager.load(imagePowerupURL);
 
 const player = new Player(CONFIG.player, characterImage);
 let score = 0;
@@ -64,7 +66,7 @@ function spawnEnemy(): void {
 }
 
 function spawnPowerup(): void {
-  powerups.push(new Powerup(canvas));
+  powerups.push(new Powerup(canvas, powerupImage));
 }
 
 function update(delta: number): void {
@@ -142,6 +144,7 @@ function update(delta: number): void {
   }
 
   for (let i = powerups.length - 1; i >= 0; i--) {
+    powerups[i].update();
     if (player.collidesWith(powerups[i])) {
       hasShield = true;
       shieldTimer = CONFIG.powerup.shieldDuration;
