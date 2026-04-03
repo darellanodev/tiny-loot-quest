@@ -41,3 +41,5 @@ Open `index.html` in your browser.
 
 - Tools:
   <https://alekseyfadeev.github.io/SpriteEditor/>
+  <https://yeoji.github.io/spritesheet-cutter/>
+  <https://spritesheetgenerator.online/editor>
