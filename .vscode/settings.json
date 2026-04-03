@@ -21,9 +21,11 @@
     "peacock.color": "#1a3323",
     "cSpell.words": [
         "hitbox",
+        "opencode",
         "Powerup",
         "powerups",
         "spritesheet",
+        "spritesheets",
         "WASD"
     ]
 }
