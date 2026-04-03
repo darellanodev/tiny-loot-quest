@@ -8,6 +8,8 @@ export interface EntityConfig {
 
 export interface PlayerConfig extends EntityConfig {
     speed: number;
+    hitboxWidth: number;
+    hitboxHeight: number;
 }
 
 export interface CoinConfig {
@@ -18,6 +20,7 @@ export interface CoinConfig {
 
 export interface EnemyConfig {
     size: number;
+    hitboxWidth: number;
     color: string;
     baseSpawnInterval: number;
     minSpawnInterval: number;
@@ -65,13 +68,15 @@ export const CONFIG: Config = {
         y: 180,
         w: 16,
         h: 16,
+        hitboxWidth: 10,
+        hitboxHeight: 12,
         color: '#00d4ff',
-        speed: 4
+        speed: 1
     },
     coin: { size: 15, color: '#ffd700', spawnInterval: 120 },
-    enemy: { size: 25, color: '#ff4444', baseSpawnInterval: 90, minSpawnInterval: 30 },
+    enemy: { size: 16, hitboxWidth: 8, color: '#ff4444', baseSpawnInterval: 90, minSpawnInterval: 30 },
     powerup: { size: 20, color: '#00ff88', spawnInterval: 600, shieldDuration: 300 },
     particle: { defaultCount: 10 },
     initialLives: 3,
-    difficulty: { base: 1, increment: 0.2, scorePerLevel: 5 }
+    difficulty: { base: 0.3, increment: 0.05, scorePerLevel: 5 }
 };

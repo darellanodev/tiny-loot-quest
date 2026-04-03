@@ -14,32 +14,31 @@ export class Enemy extends Entity {
     frameDelay: number;
     direction: number;
 
-    constructor(canvas: HTMLCanvasElement, difficulty: number, sprite: HTMLImageElement) {
+    constructor(canvas: HTMLCanvasElement, speed: number, sprite: HTMLImageElement) {
         const size = CONFIG.enemy.size;
-        const speed = difficulty;
         const side = Math.floor(Math.random() * 4);
         let x: number, y: number, vx: number, vy: number;
 
         if (side === 0) {
             x = Math.random() * canvas.width;
             y = -size;
-            vx = (Math.random() - 0.5) * 2 * speed;
-            vy = Math.random() * 2 + speed;
+            vx = 0;
+            vy = speed;
         } else if (side === 1) {
             x = canvas.width;
             y = Math.random() * canvas.height;
-            vx = -(Math.random() * 2 + speed);
-            vy = (Math.random() - 0.5) * 2 * speed;
+            vx = -speed;
+            vy = 0;
         } else if (side === 2) {
             x = Math.random() * canvas.width;
             y = canvas.height;
-            vx = (Math.random() - 0.5) * 2 * speed;
-            vy = -(Math.random() * 2 + speed);
+            vx = 0;
+            vy = -speed;
         } else {
             x = -size;
             y = Math.random() * canvas.height;
-            vx = Math.random() * 2 + speed;
-            vy = (Math.random() - 0.5) * 2 * speed;
+            vx = speed;
+            vy = 0;
         }
 
         super(x, y, size, size, CONFIG.enemy.color);
@@ -60,11 +59,10 @@ export class Enemy extends Entity {
         this.x += this.vx * delta;
         this.y += this.vy * delta;
 
-        if (Math.abs(this.vx) > Math.abs(this.vy)) {
-            this.direction = this.vx > 0 ? 2 : 1;
-        } else {
-            this.direction = this.vy > 0 ? 0 : 3;
-        }
+        if (this.vx > 0) this.direction = 2;
+        else if (this.vx < 0) this.direction = 1;
+        else if (this.vy > 0) this.direction = 0;
+        else if (this.vy < 0) this.direction = 3;
 
         this.frameTimer += delta;
         if (this.frameTimer >= this.frameDelay) {

@@ -28,10 +28,11 @@ const enemies: Enemy[] = [];
 const powerups: Powerup[] = [];
 const particles: Particle[] = [];
 
+const ENEMY_SPEED = 0.3;
+
 let coinTimer = 0;
 let enemyTimer = 0;
 let powerupTimer = 0;
-let difficulty = CONFIG.difficulty.base;
 
 const keys: Record<string, boolean> = {};
 
@@ -56,7 +57,7 @@ function spawnCoin(): void {
 spawnCoin();
 
 function spawnEnemy(): void {
-  enemies.push(new Enemy(canvas, difficulty, skeletonImage));
+  enemies.push(new Enemy(canvas, ENEMY_SPEED, skeletonImage));
 }
 
 function spawnPowerup(): void {
@@ -73,10 +74,6 @@ function update(delta: number): void {
   }
 
   enemyTimer += delta;
-  difficulty =
-    CONFIG.difficulty.base +
-    Math.floor(score / CONFIG.difficulty.scorePerLevel) *
-      CONFIG.difficulty.increment;
   if (
     enemyTimer >
     Math.max(
