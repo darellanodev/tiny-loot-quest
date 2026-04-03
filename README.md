@@ -36,5 +36,8 @@ Open `index.html` in your browser.
 ### Credits
 
 - Some art used from:
+  <https://pixelfight.itch.io/16x16-retro-pixel-character-template>
+  <https://arex-v.itch.io/damp-dungeons>
 
-<https://pixelfight.itch.io/16x16-retro-pixel-character-template>
+- Tools:
+  <https://alekseyfadeev.github.io/SpriteEditor/>
