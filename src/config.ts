@@ -63,8 +63,8 @@ export const CONFIG: Config = {
     player: {
         x: 280,
         y: 180,
-        w: 30,
-        h: 30,
+        w: 16,
+        h: 16,
         color: '#00d4ff',
         speed: 4
     },
