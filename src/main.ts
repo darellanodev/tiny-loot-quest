@@ -6,12 +6,19 @@ import { Enemy } from "./classes/Enemy.js";
 import { Powerup } from "./classes/Powerup.js";
 import { Particle } from "./classes/Particle.js";
 import { ImageManager } from "./classes/ImageManager.js";
+import { TileMap } from "./classes/TileMap.js";
 
 const canvas = document.getElementById("game") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
 ctx.imageSmoothingEnabled = false;
 
 const imageManager = new ImageManager();
+const mapURL = new URL(`./data/map.json`, import.meta.url).href;
+const mapTilesetURL = new URL(`./images/map.png`, import.meta.url).href;
+const tileMap = await TileMap.load(mapTilesetURL, mapURL, imageManager);
+
+canvas.width = tileMap.mapWidth * tileMap.tileSize;
+canvas.height = tileMap.mapHeight * tileMap.tileSize;
 const imageCharacterURL = new URL(`./images/character.png`, import.meta.url).href;
 const characterImage = await imageManager.load(imageCharacterURL);
 const imageSkeletonURL = new URL(`./images/skeleton.png`, import.meta.url).href;
@@ -160,8 +167,7 @@ function update(delta: number): void {
 }
 
 function drawBackground(): void {
-  ctx.fillStyle = CONFIG.background;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    tileMap.draw(ctx);
 }
 
 function drawPlayer(): void {

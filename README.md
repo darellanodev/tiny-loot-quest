@@ -38,6 +38,7 @@ Open `index.html` in your browser.
 - Some art used from:
   - <https://pixelfight.itch.io/16x16-retro-pixel-character-template>
   - <https://arex-v.itch.io/damp-dungeons>
+  - <https://thatsmrdo.itch.io/emberwild-terrain-pack>
 
 - Tools:
   - <https://alekseyfadeev.github.io/SpriteEditor/>
