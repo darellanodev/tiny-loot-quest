@@ -10,6 +10,7 @@ export interface TileMapData {
 export interface Layer {
     name: string;
     tiles: Tile[];
+    collider?: boolean;
 }
 
 export interface Tile {
@@ -24,6 +25,7 @@ export class TileMap {
     public tileSize: number;
     public mapWidth: number;
     public mapHeight: number;
+    private collisionTiles: Set<string> = new Set();
 
     constructor(data: TileMapData, tilesetImage: HTMLImageElement) {
         this.data = data;
@@ -31,6 +33,14 @@ export class TileMap {
         this.tileSize = data.tileSize;
         this.mapWidth = data.mapWidth;
         this.mapHeight = data.mapHeight;
+        
+        for (const layer of this.data.layers) {
+            if (layer.collider !== false) {
+                for (const tile of layer.tiles) {
+                    this.collisionTiles.add(`${tile.x},${tile.y}`);
+                }
+            }
+        }
     }
 
     static async load(tilesetUrl: string, mapUrl: string, imageManager: ImageManager): Promise<TileMap> {
@@ -43,8 +53,18 @@ export class TileMap {
         return new TileMap(data, tilesetImage);
     }
 
+    isColliding(x: number, y: number): boolean {
+        const tileX = Math.floor(x / this.tileSize);
+        const tileY = Math.floor(y / this.tileSize);
+        return this.collisionTiles.has(`${tileX},${tileY}`);
+    }
+
     draw(ctx: CanvasRenderingContext2D): void {
-        for (const layer of this.data.layers) {
+        const floorLayer = this.data.layers.find(l => l.name === "floor");
+        const otherLayers = this.data.layers.filter(l => l.name !== "floor");
+        
+        if (floorLayer) this.drawLayer(ctx, floorLayer);
+        for (const layer of otherLayers) {
             this.drawLayer(ctx, layer);
         }
     }

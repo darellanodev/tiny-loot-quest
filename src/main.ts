@@ -29,6 +29,7 @@ const imagePowerupURL = new URL(`./images/powerup.png`, import.meta.url).href;
 const powerupImage = await imageManager.load(imagePowerupURL);
 
 const player = new Player(CONFIG.player, characterImage);
+player.setTileMap(tileMap);
 let score = 0;
 let gameOver = false;
 let lives = CONFIG.initialLives;
