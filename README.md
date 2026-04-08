@@ -36,10 +36,11 @@ Open `index.html` in your browser.
 ### Credits
 
 - Some art used from:
-  <https://pixelfight.itch.io/16x16-retro-pixel-character-template>
-  <https://arex-v.itch.io/damp-dungeons>
+  - <https://pixelfight.itch.io/16x16-retro-pixel-character-template>
+  - <https://arex-v.itch.io/damp-dungeons>
 
 - Tools:
-  <https://alekseyfadeev.github.io/SpriteEditor/>
-  <https://yeoji.github.io/spritesheet-cutter/>
-  <https://spritesheetgenerator.online/editor>
+  - <https://alekseyfadeev.github.io/SpriteEditor/>
+  - <https://yeoji.github.io/spritesheet-cutter/>
+  - <https://spritesheetgenerator.online/editor>
+  - <https://www.spritefusion.com/editor>
