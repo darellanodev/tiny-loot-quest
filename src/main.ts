@@ -1,12 +1,9 @@
 import "./style.css";
 import { CONFIG } from "./config.js";
 import { Player } from "./classes/Player.js";
-import { Coin } from "./classes/Coin.js";
-import { Enemy } from "./classes/Enemy.js";
-import { Powerup } from "./classes/Powerup.js";
-import { Particle } from "./classes/Particle.js";
 import { ImageManager } from "./classes/ImageManager.js";
 import { TileMap } from "./classes/TileMap.js";
+import { Game } from "./classes/Game.js";
 
 const canvas = document.getElementById("game") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
@@ -35,226 +32,26 @@ const powerupImage = await imageManager.load(imagePowerupURL);
 
 const player = new Player(CONFIG.player, characterImage);
 player.setTileMap(tileMap);
-let score = 0;
-let gameOver = false;
-let lives = CONFIG.initialLives;
-let hasShield = false;
-let shieldTimer = 0;
 
-const coins: Coin[] = [];
-const enemies: Enemy[] = [];
-const powerups: Powerup[] = [];
-const particles: Particle[] = [];
-
-const ENEMY_SPEED = 0.3;
-
-let coinTimer = 0;
-let enemyTimer = 0;
-let powerupTimer = 0;
+const game = new Game(
+  player,
+  tileMap,
+  canvas,
+  gameHeight,
+  HUD_HEIGHT,
+  coinImage,
+  skeletonImage,
+  powerupImage
+);
 
 const keys: Record<string, boolean> = {};
 
 window.addEventListener("keydown", (e) => (keys[e.key] = true));
 window.addEventListener("keyup", (e) => (keys[e.key] = false));
 
-function createParticles(
-  x: number,
-  y: number,
-  color: string,
-  count: number,
-): void {
-  for (let i = 0; i < count; i++) {
-    particles.push(new Particle(x, y, color));
-  }
-}
-
-function spawnCoin(): void {
-  coins.push(new Coin(canvas, gameHeight, coinImage));
-}
-
-spawnCoin();
-
-function spawnEnemy(): void {
-  enemies.push(new Enemy(canvas, gameHeight, ENEMY_SPEED, skeletonImage));
-}
-
-function spawnPowerup(): void {
-  powerups.push(new Powerup(canvas, gameHeight, powerupImage));
-}
-
-function update(delta: number): void {
-  player.move(keys, canvas, delta, gameHeight);
-
-  coinTimer += delta;
-  if (coinTimer > CONFIG.coin.spawnInterval) {
-    spawnCoin();
-    coinTimer = 0;
-  }
-
-  enemyTimer += delta;
-  if (
-    enemyTimer >
-    Math.max(
-      CONFIG.enemy.minSpawnInterval,
-      CONFIG.enemy.baseSpawnInterval - score * 2,
-    )
-  ) {
-    spawnEnemy();
-    enemyTimer = 0;
-  }
-
-  powerupTimer += delta;
-  if (powerupTimer > CONFIG.powerup.spawnInterval) {
-    spawnPowerup();
-    powerupTimer = 0;
-  }
-
-  if (hasShield) {
-    shieldTimer -= delta;
-    if (shieldTimer <= 0) hasShield = false;
-  }
-
-  for (let i = particles.length - 1; i >= 0; i--) {
-    particles[i].update(delta);
-    if (particles[i].isDead()) particles.splice(i, 1);
-  }
-
-  for (let i = enemies.length - 1; i >= 0; i--) {
-    enemies[i].update(delta);
-    if (enemies[i].isOutOfBounds(canvas.width, gameHeight)) {
-      enemies.splice(i, 1);
-      continue;
-    }
-    if (player.collidesWith(enemies[i])) {
-      if (!hasShield) {
-        lives--;
-        createParticles(
-          player.x + player.w / 2,
-          player.y + player.h / 2,
-          CONFIG.enemy.color,
-          CONFIG.particle.defaultCount + 5,
-        );
-      }
-      enemies.splice(i, 1);
-      if (lives <= 0) {
-        gameOver = true;
-      }
-    }
-  }
-
-  for (let i = coins.length - 1; i >= 0; i--) {
-    coins[i].update();
-    if (player.collidesWith(coins[i])) {
-      score++;
-      createParticles(
-        coins[i].x + coins[i].w / 2,
-        coins[i].y + coins[i].h / 2,
-        CONFIG.coin.color,
-        CONFIG.particle.defaultCount,
-      );
-      coins.splice(i, 1);
-    }
-  }
-
-  for (let i = powerups.length - 1; i >= 0; i--) {
-    powerups[i].update();
-    if (player.collidesWith(powerups[i])) {
-      hasShield = true;
-      shieldTimer = CONFIG.powerup.shieldDuration;
-      createParticles(
-        powerups[i].x + powerups[i].w / 2,
-        powerups[i].y + powerups[i].h / 2,
-        CONFIG.powerup.color,
-        CONFIG.particle.defaultCount + 5,
-      );
-      powerups.splice(i, 1);
-    }
-  }
-}
-
-function drawBackground(): void {
-    tileMap.draw(ctx, HUD_HEIGHT);
-}
-
-function drawPlayer(): void {
-  player.draw(ctx, HUD_HEIGHT);
-  if (hasShield) {
-    ctx.strokeStyle = CONFIG.powerup.color;
-    ctx.lineWidth = 3;
-    ctx.strokeRect(player.x - 3, player.y + HUD_HEIGHT - 3, player.w + 6, player.h + 6);
-  }
-}
-
-function drawCoins(): void {
-  coins.forEach((c) => c.draw(ctx, HUD_HEIGHT));
-}
-
-function drawEnemies(): void {
-  enemies.forEach((e) => e.draw(ctx, HUD_HEIGHT));
-}
-
-function drawPowerups(): void {
-  powerups.forEach((p) => p.draw(ctx, HUD_HEIGHT));
-}
-
-function drawParticles(): void {
-  particles.forEach((p) => p.draw(ctx, HUD_HEIGHT));
-}
-
-function drawScore(): void {
-  ctx.fillStyle = "#fff";
-  ctx.font = "20px Arial";
-  ctx.fillText("Score: " + score, 10, HUD_HEIGHT - 15);
-}
-
-function drawLives(): void {
-  ctx.fillStyle = "#ff6b6b";
-  ctx.font = "20px Arial";
-  ctx.fillText("Lives: " + lives, 10, HUD_HEIGHT - 40);
-}
-
-function drawHud(): void {
-  ctx.drawImage(hudImage, 0, 0);
-}
-
-function drawGameOver(): void {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#fff";
-  ctx.font = "40px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 20);
-  ctx.font = "20px Arial";
-  ctx.fillText(
-    "Final Score: " + score,
-    canvas.width / 2,
-    canvas.height / 2 + 20,
-  );
-  ctx.fillText(
-    "Press SPACE to restart",
-    canvas.width / 2,
-    canvas.height / 2 + 60,
-  );
-  ctx.textAlign = "left";
-}
-
-function restart(): void {
-  player.reset(CONFIG.player);
-  score = 0;
-  lives = CONFIG.initialLives;
-  hasShield = false;
-  shieldTimer = 0;
-  coins.length = 0;
-  enemies.length = 0;
-  powerups.length = 0;
-  particles.length = 0;
-  gameOver = false;
-  spawnCoin();
-}
-
 window.addEventListener("keydown", (e) => {
-  if (gameOver && e.key === " ") {
-    restart();
+  if (game.gameOver && e.key === " ") {
+    game.restart();
   }
 });
 
@@ -264,18 +61,13 @@ function loop(currentTime: number): void {
   const delta = (currentTime - lastTime) / 16.667;
   lastTime = currentTime;
 
-  update(delta);
-  drawBackground();
-  drawHud();
-  drawPlayer();
-  drawCoins();
-  drawEnemies();
-  drawPowerups();
-  drawParticles();
-  drawScore();
-  drawLives();
-  if (gameOver) {
-    drawGameOver();
+  game.update(delta, keys);
+  game.draw(ctx);
+  game.drawHud(ctx, hudImage);
+  game.drawScore(ctx);
+  game.drawLives(ctx);
+  if (game.gameOver) {
+    game.drawGameOver(ctx);
   } else {
     requestAnimationFrame(loop);
   }
