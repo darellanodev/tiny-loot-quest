@@ -1,5 +1,5 @@
-import { Player } from "./Player.js";
-import { TileMap } from "./TileMap.js";
+import { Player } from "../entities/Player.js";
+import { TileMap } from "../systems/TileMap.js";
 import { GameState } from "./GameState.js";
 import { Spawner } from "./Spawner.js";
 import { EntityManager } from "./EntityManager.js";

@@ -1,7 +1,7 @@
-import { Coin } from "./Coin.js";
-import { Enemy } from "./Enemy.js";
-import { Powerup } from "./Powerup.js";
-import { CONFIG } from "../config.js";
+import { Coin } from "../entities/Coin.js";
+import { Enemy } from "../entities/Enemy.js";
+import { Powerup } from "../entities/Powerup.js";
+import { CONFIG } from "../../config.js";
 
 export class Spawner {
   private coinTimer = 0;

@@ -1,9 +1,9 @@
 import "./style.css";
 import { CONFIG } from "./config.js";
-import { Player } from "./classes/Player.js";
-import { ImageManager } from "./classes/ImageManager.js";
-import { TileMap } from "./classes/TileMap.js";
-import { Game } from "./classes/Game.js";
+import { Player } from "./classes/entities/Player.js";
+import { ImageManager } from "./classes/systems/ImageManager.js";
+import { TileMap } from "./classes/systems/TileMap.js";
+import { Game } from "./classes/core/Game.js";
 
 const canvas = document.getElementById("game") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;

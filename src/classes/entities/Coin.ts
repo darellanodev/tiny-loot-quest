@@ -1,5 +1,5 @@
 import { Entity } from './Entity.js';
-import { CONFIG } from '../config.js';
+import { CONFIG } from '../../config.js';
 
 export class Coin extends Entity {
     sprite: HTMLImageElement;

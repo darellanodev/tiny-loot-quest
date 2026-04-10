@@ -1,6 +1,6 @@
 import { Entity } from "./Entity.js";
-import { PlayerConfig } from "../config.js";
-import { TileMap } from "./TileMap.js";
+import { PlayerConfig } from "../../config.js";
+import { TileMap } from "../systems/TileMap.js";
 
 export class Player extends Entity {
   private tileMap: TileMap | null = null;

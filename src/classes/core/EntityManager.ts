@@ -1,10 +1,10 @@
-import { Player } from "./Player.js";
-import { Coin } from "./Coin.js";
-import { Enemy } from "./Enemy.js";
-import { Powerup } from "./Powerup.js";
-import { Particle } from "./Particle.js";
+import { Player } from "../entities/Player.js";
+import { Coin } from "../entities/Coin.js";
+import { Enemy } from "../entities/Enemy.js";
+import { Powerup } from "../entities/Powerup.js";
+import { Particle } from "../entities/Particle.js";
 import { GameState } from "./GameState.js";
-import { CONFIG } from "../config.js";
+import { CONFIG } from "../../config.js";
 
 export class EntityManager {
   private player: Player;
