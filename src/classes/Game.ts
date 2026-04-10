@@ -73,8 +73,20 @@ export class Game {
   }
 
   update(delta: number, keys: Record<string, boolean>): void {
-    this.player.move(keys, this.canvas, delta, this.gameHeight);
+    this.updatePlayer(keys, delta);
+    this.updateTimers(delta);
+    this.updateShield(delta);
+    this.updateParticles(delta);
+    this.updateEnemies(delta);
+    this.updateCoins();
+    this.updatePowerups();
+  }
 
+  private updatePlayer(keys: Record<string, boolean>, delta: number): void {
+    this.player.move(keys, this.canvas, delta, this.gameHeight);
+  }
+
+  private updateTimers(delta: number): void {
     this.coinTimer += delta;
     if (this.coinTimer > CONFIG.coin.spawnInterval) {
       this.spawnCoin();
@@ -98,17 +110,23 @@ export class Game {
       this.spawnPowerup();
       this.powerupTimer = 0;
     }
+  }
 
+  private updateShield(delta: number): void {
     if (this.hasShield) {
       this.shieldTimer -= delta;
       if (this.shieldTimer <= 0) this.hasShield = false;
     }
+  }
 
+  private updateParticles(delta: number): void {
     for (let i = this.particles.length - 1; i >= 0; i--) {
       this.particles[i].update(delta);
       if (this.particles[i].isDead()) this.particles.splice(i, 1);
     }
+  }
 
+  private updateEnemies(delta: number): void {
     for (let i = this.enemies.length - 1; i >= 0; i--) {
       this.enemies[i].update(delta);
       if (this.enemies[i].isOutOfBounds(this.canvas.width, this.gameHeight)) {
@@ -131,7 +149,9 @@ export class Game {
         }
       }
     }
+  }
 
+  private updateCoins(): void {
     for (let i = this.coins.length - 1; i >= 0; i--) {
       this.coins[i].update();
       if (this.player.collidesWith(this.coins[i])) {
@@ -145,7 +165,9 @@ export class Game {
         this.coins.splice(i, 1);
       }
     }
+  }
 
+  private updatePowerups(): void {
     for (let i = this.powerups.length - 1; i >= 0; i--) {
       this.powerups[i].update();
       if (this.player.collidesWith(this.powerups[i])) {
