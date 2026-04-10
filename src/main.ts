@@ -22,6 +22,8 @@ const HUD_HEIGHT = hudImage.height;
 
 canvas.width = tileMap.mapWidth * tileMap.tileSize;
 canvas.height = tileMap.mapHeight * tileMap.tileSize + HUD_HEIGHT;
+const gameHeight = tileMap.mapHeight * tileMap.tileSize;
+
 const imageCharacterURL = new URL(`./images/character.png`, import.meta.url).href;
 const characterImage = await imageManager.load(imageCharacterURL);
 const imageSkeletonURL = new URL(`./images/skeleton.png`, import.meta.url).href;
@@ -67,21 +69,21 @@ function createParticles(
 }
 
 function spawnCoin(): void {
-  coins.push(new Coin(canvas, coinImage));
+  coins.push(new Coin(canvas, gameHeight, coinImage));
 }
 
 spawnCoin();
 
 function spawnEnemy(): void {
-  enemies.push(new Enemy(canvas, ENEMY_SPEED, skeletonImage));
+  enemies.push(new Enemy(canvas, gameHeight, ENEMY_SPEED, skeletonImage));
 }
 
 function spawnPowerup(): void {
-  powerups.push(new Powerup(canvas, powerupImage));
+  powerups.push(new Powerup(canvas, gameHeight, powerupImage));
 }
 
 function update(delta: number): void {
-  player.move(keys, canvas, delta);
+  player.move(keys, canvas, delta, gameHeight);
 
   coinTimer += delta;
   if (coinTimer > CONFIG.coin.spawnInterval) {
@@ -118,8 +120,8 @@ function update(delta: number): void {
   }
 
   for (let i = enemies.length - 1; i >= 0; i--) {
-    enemies[i].update(canvas, delta);
-    if (enemies[i].isOutOfBounds(canvas)) {
+    enemies[i].update(delta);
+    if (enemies[i].isOutOfBounds(canvas.width, gameHeight)) {
       enemies.splice(i, 1);
       continue;
     }
@@ -277,10 +279,6 @@ function loop(currentTime: number): void {
   } else {
     requestAnimationFrame(loop);
   }
-}
-
-function drawEntitiesWithOffset(): void {
-  // Deprecated - entities now draw with offset in their own draw functions
 }
 
 loop(performance.now());

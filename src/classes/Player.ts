@@ -36,7 +36,7 @@ export class Player extends Entity {
   direction: number; // 0 down, 1 up, 2 right, 3 left
   isMoving: boolean;
 
-  move(keys: Record<string, boolean>, canvas: HTMLCanvasElement, delta: number): void {
+  move(keys: Record<string, boolean>, canvas: HTMLCanvasElement, delta: number, gameHeight: number): void {
     this.isMoving = false;
     let moved = false;
     
@@ -78,7 +78,7 @@ export class Player extends Entity {
     if (moved) {
       this.isMoving = true;
       newX = Math.max(0, Math.min(canvas.width - this.w, newX));
-      newY = Math.max(0, Math.min(canvas.height - this.h, newY));
+      newY = Math.max(0, Math.min(gameHeight - this.h, newY));
       
       if (!checkCollision(newX, this.y)) this.x = newX;
       if (!checkCollision(this.x, newY)) this.y = newY;

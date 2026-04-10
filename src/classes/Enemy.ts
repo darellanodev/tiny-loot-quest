@@ -14,7 +14,7 @@ export class Enemy extends Entity {
     frameDelay: number;
     direction: number;
 
-    constructor(canvas: HTMLCanvasElement, speed: number, sprite: HTMLImageElement) {
+    constructor(canvas: HTMLCanvasElement, gameHeight: number, speed: number, sprite: HTMLImageElement) {
         const size = CONFIG.enemy.size;
         const side = Math.floor(Math.random() * 4);
         let x: number, y: number, vx: number, vy: number;
@@ -26,17 +26,17 @@ export class Enemy extends Entity {
             vy = speed;
         } else if (side === 1) {
             x = canvas.width;
-            y = Math.random() * canvas.height;
+            y = Math.random() * gameHeight;
             vx = -speed;
             vy = 0;
         } else if (side === 2) {
             x = Math.random() * canvas.width;
-            y = canvas.height;
+            y = gameHeight;
             vx = 0;
             vy = -speed;
         } else {
             x = -size;
-            y = Math.random() * canvas.height;
+            y = Math.random() * gameHeight;
             vx = speed;
             vy = 0;
         }
@@ -55,7 +55,7 @@ export class Enemy extends Entity {
         this.direction = 0;
     }
 
-    update(_canvas: HTMLCanvasElement, delta: number): void {
+    update(delta: number): void {
         this.x += this.vx * delta;
         this.y += this.vy * delta;
 
@@ -71,9 +71,9 @@ export class Enemy extends Entity {
         }
     }
 
-    isOutOfBounds(canvas: HTMLCanvasElement): boolean {
-        return this.x < -50 || this.x > canvas.width + 50 ||
-               this.y < -50 || this.y > canvas.height + 50;
+    isOutOfBounds(canvasWidth: number, gameHeight: number): boolean {
+        return this.x < -50 || this.x > canvasWidth + 50 ||
+               this.y < -50 || this.y > gameHeight + 50;
     }
 
     draw(ctx: CanvasRenderingContext2D, offsetY: number = 0): void {

@@ -14,11 +14,11 @@ export class Coin extends Entity {
     waitDelay: number;
     isAnimating: boolean;
 
-    constructor(canvas: HTMLCanvasElement, sprite: HTMLImageElement) {
+    constructor(canvas: HTMLCanvasElement, gameHeight: number, sprite: HTMLImageElement) {
         const size = CONFIG.coin.size;
         super(
             Math.random() * (canvas.width - size),
-            Math.random() * (canvas.height - size),
+            Math.random() * (gameHeight - size),
             size,
             size,
             CONFIG.coin.color
