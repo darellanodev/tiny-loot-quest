@@ -16,9 +16,12 @@ const imageManager = new ImageManager();
 const mapURL = new URL(`./data/map.json`, import.meta.url).href;
 const mapTilesetURL = new URL(`./images/map.png`, import.meta.url).href;
 const tileMap = await TileMap.load(mapTilesetURL, mapURL, imageManager);
+const imageHudURL = new URL(`./images/hud.png`, import.meta.url).href;
+const hudImage = await imageManager.load(imageHudURL);
+const HUD_HEIGHT = hudImage.height;
 
 canvas.width = tileMap.mapWidth * tileMap.tileSize;
-canvas.height = tileMap.mapHeight * tileMap.tileSize;
+canvas.height = tileMap.mapHeight * tileMap.tileSize + HUD_HEIGHT;
 const imageCharacterURL = new URL(`./images/character.png`, import.meta.url).href;
 const characterImage = await imageManager.load(imageCharacterURL);
 const imageSkeletonURL = new URL(`./images/skeleton.png`, import.meta.url).href;
@@ -168,44 +171,48 @@ function update(delta: number): void {
 }
 
 function drawBackground(): void {
-    tileMap.draw(ctx);
+    tileMap.draw(ctx, HUD_HEIGHT);
 }
 
 function drawPlayer(): void {
-  player.draw(ctx);
+  player.draw(ctx, HUD_HEIGHT);
   if (hasShield) {
     ctx.strokeStyle = CONFIG.powerup.color;
     ctx.lineWidth = 3;
-    ctx.strokeRect(player.x - 3, player.y - 3, player.w + 6, player.h + 6);
+    ctx.strokeRect(player.x - 3, player.y + HUD_HEIGHT - 3, player.w + 6, player.h + 6);
   }
 }
 
 function drawCoins(): void {
-  coins.forEach((c) => c.draw(ctx));
+  coins.forEach((c) => c.draw(ctx, HUD_HEIGHT));
 }
 
 function drawEnemies(): void {
-  enemies.forEach((e) => e.draw(ctx));
+  enemies.forEach((e) => e.draw(ctx, HUD_HEIGHT));
 }
 
 function drawPowerups(): void {
-  powerups.forEach((p) => p.draw(ctx));
+  powerups.forEach((p) => p.draw(ctx, HUD_HEIGHT));
 }
 
 function drawParticles(): void {
-  particles.forEach((p) => p.draw(ctx));
+  particles.forEach((p) => p.draw(ctx, HUD_HEIGHT));
 }
 
 function drawScore(): void {
   ctx.fillStyle = "#fff";
   ctx.font = "20px Arial";
-  ctx.fillText("Score: " + score, 10, 30);
+  ctx.fillText("Score: " + score, 10, HUD_HEIGHT - 15);
 }
 
 function drawLives(): void {
   ctx.fillStyle = "#ff6b6b";
   ctx.font = "20px Arial";
-  ctx.fillText("Lives: " + lives, 10, 60);
+  ctx.fillText("Lives: " + lives, 10, HUD_HEIGHT - 40);
+}
+
+function drawHud(): void {
+  ctx.drawImage(hudImage, 0, 0);
 }
 
 function drawGameOver(): void {
@@ -257,6 +264,7 @@ function loop(currentTime: number): void {
 
   update(delta);
   drawBackground();
+  drawHud();
   drawPlayer();
   drawCoins();
   drawEnemies();
@@ -269,6 +277,10 @@ function loop(currentTime: number): void {
   } else {
     requestAnimationFrame(loop);
   }
+}
+
+function drawEntitiesWithOffset(): void {
+  // Deprecated - entities now draw with offset in their own draw functions
 }
 
 loop(performance.now());

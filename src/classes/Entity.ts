@@ -14,8 +14,8 @@ export class Entity {
                this.y + this.h > other.y;
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D, offsetY: number = 0): void {
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.w, this.h);
+        ctx.fillRect(this.x, this.y + offsetY, this.w, this.h);
     }
 }

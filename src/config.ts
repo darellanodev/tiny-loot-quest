@@ -65,7 +65,7 @@ export const CONFIG: Config = {
     background: '#1a1a2e',
     player: {
         x: 280,
-        y: 180,
+        y: 220,
         w: 16,
         h: 16,
         hitboxWidth: 10,

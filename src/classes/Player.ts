@@ -90,7 +90,7 @@ export class Player extends Entity {
     this.y = config.y;
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: CanvasRenderingContext2D, offsetY: number = 0): void {
     if (this.sprite.complete && this.sprite.naturalWidth !== 0) {
       // Determine row based on direction
       const row = this.direction;
@@ -115,14 +115,14 @@ export class Player extends Entity {
         this.frameWidth,
         this.frameHeight,
         this.x,
-        this.y,
+        this.y + offsetY,
         this.w,
         this.h,
       );
     } else {
       // Fallback to rectangle
       ctx.fillStyle = this.color;
-      ctx.fillRect(this.x, this.y, this.w, this.h);
+      ctx.fillRect(this.x, this.y + offsetY, this.w, this.h);
     }
   }
 }

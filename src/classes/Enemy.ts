@@ -76,7 +76,7 @@ export class Enemy extends Entity {
                this.y < -50 || this.y > canvas.height + 50;
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D, offsetY: number = 0): void {
         if (this.sprite.complete && this.sprite.naturalWidth !== 0) {
             const frameX = this.currentFrame * this.frameWidth;
             const frameY = this.direction * this.frameHeight;
@@ -87,13 +87,13 @@ export class Enemy extends Entity {
                 this.frameWidth,
                 this.frameHeight,
                 this.x,
-                this.y,
+                this.y + offsetY,
                 this.w,
                 this.h
             );
         } else {
             ctx.fillStyle = this.color;
-            ctx.fillRect(this.x, this.y, this.w, this.h);
+            ctx.fillRect(this.x, this.y + offsetY, this.w, this.h);
         }
     }
 }

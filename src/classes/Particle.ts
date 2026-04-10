@@ -24,10 +24,10 @@ export class Particle {
         this.size *= 0.95;
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D, offsetY: number = 0): void {
         ctx.globalAlpha = this.life / 50;
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.size, this.size);
+        ctx.fillRect(this.x, this.y + offsetY, this.size, this.size);
         ctx.globalAlpha = 1;
     }
 

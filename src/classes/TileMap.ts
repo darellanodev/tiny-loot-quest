@@ -59,17 +59,17 @@ export class TileMap {
         return this.collisionTiles.has(`${tileX},${tileY}`);
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D, offsetY: number = 0): void {
         const floorLayer = this.data.layers.find(l => l.name === "floor");
         const otherLayers = this.data.layers.filter(l => l.name !== "floor");
         
-        if (floorLayer) this.drawLayer(ctx, floorLayer);
+        if (floorLayer) this.drawLayer(ctx, floorLayer, offsetY);
         for (const layer of otherLayers) {
-            this.drawLayer(ctx, layer);
+            this.drawLayer(ctx, layer, offsetY);
         }
     }
 
-    drawLayer(ctx: CanvasRenderingContext2D, layer: Layer): void {
+    drawLayer(ctx: CanvasRenderingContext2D, layer: Layer, offsetY: number = 0): void {
         const tilesPerRow = Math.floor(this.tilesetImage.width / this.tileSize);
         
         for (const tile of layer.tiles) {
@@ -80,7 +80,7 @@ export class TileMap {
             const srcY = Math.floor(tileId / tilesPerRow) * this.tileSize;
             
             const destX = tile.x * this.tileSize;
-            const destY = tile.y * this.tileSize;
+            const destY = tile.y * this.tileSize + offsetY;
             
             ctx.drawImage(
                 this.tilesetImage,
