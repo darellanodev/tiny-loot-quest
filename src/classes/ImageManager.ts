@@ -2,7 +2,7 @@ export class ImageManager {
   load(url: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.crossOrigin = "Anonymous"; // to avoid CORS if used with Canvas
+      img.crossOrigin = "Anonymous"; 
       img.src = url;
       img.onload = () => {
         resolve(img);
@@ -11,5 +11,9 @@ export class ImageManager {
         reject(e);
       };
     });
+  }
+
+  async loadMultiple(urls: string[]): Promise<HTMLImageElement[]> {
+    return Promise.all(urls.map((url) => this.load(url)));
   }
 }

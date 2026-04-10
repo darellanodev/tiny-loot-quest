@@ -10,25 +10,25 @@ const ctx = canvas.getContext("2d")!;
 ctx.imageSmoothingEnabled = false;
 
 const imageManager = new ImageManager();
-const mapURL = new URL(`./data/map.json`, import.meta.url).href;
-const mapTilesetURL = new URL(`./images/map.png`, import.meta.url).href;
-const tileMap = await TileMap.load(mapTilesetURL, mapURL, imageManager);
-const imageHudURL = new URL(`./images/hud.png`, import.meta.url).href;
-const hudImage = await imageManager.load(imageHudURL);
+const [hudImage, characterImage, skeletonImage, coinImage, powerupImage] = 
+  await imageManager.loadMultiple([
+    new URL("./images/hud.png", import.meta.url).href,
+    new URL("./images/character.png", import.meta.url).href,
+    new URL("./images/skeleton.png", import.meta.url).href,
+    new URL("./images/coin.png", import.meta.url).href,
+    new URL("./images/powerup.png", import.meta.url).href,
+  ]);
+
+const tileMap = await TileMap.load(
+  new URL("./images/map.png", import.meta.url).href,
+  new URL("./data/map.json", import.meta.url).href,
+  imageManager
+);
 const HUD_HEIGHT = hudImage.height;
 
 canvas.width = tileMap.mapWidth * tileMap.tileSize;
 canvas.height = tileMap.mapHeight * tileMap.tileSize + HUD_HEIGHT;
 const gameHeight = tileMap.mapHeight * tileMap.tileSize;
-
-const imageCharacterURL = new URL(`./images/character.png`, import.meta.url).href;
-const characterImage = await imageManager.load(imageCharacterURL);
-const imageSkeletonURL = new URL(`./images/skeleton.png`, import.meta.url).href;
-const skeletonImage = await imageManager.load(imageSkeletonURL);
-const imageCoinURL = new URL(`./images/coin.png`, import.meta.url).href;
-const coinImage = await imageManager.load(imageCoinURL);
-const imagePowerupURL = new URL(`./images/powerup.png`, import.meta.url).href;
-const powerupImage = await imageManager.load(imagePowerupURL);
 
 const player = new Player(CONFIG.player, characterImage);
 player.setTileMap(tileMap);
