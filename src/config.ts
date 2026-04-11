@@ -58,6 +58,25 @@ export interface Config {
     particle: ParticleConfig;
     initialLives: number;
     difficulty: DifficultyConfig;
+    ui: UIConfig;
+}
+
+export interface UIConfig {
+    font: string;
+    fontLarge: string;
+    textColor: string;
+    livesColor: string;
+    shieldColor: string;
+    gameOverBg: string;
+    hudOffset: HUDOffsets;
+}
+
+export interface HUDOffsets {
+    scoreY: number;
+    livesY: number;
+    gameOverTitleY: number;
+    gameOverScoreY: number;
+    gameOverRestartY: number;
 }
 
 export const CONFIG: Config = {
@@ -78,5 +97,14 @@ export const CONFIG: Config = {
     powerup: { size: 16, color: '#00ff88', spawnInterval: 600, shieldDuration: 300 },
     particle: { defaultCount: 10 },
     initialLives: 3,
-    difficulty: { base: 0.3, increment: 0.05, scorePerLevel: 5 }
+    difficulty: { base: 0.3, increment: 0.05, scorePerLevel: 5 },
+    ui: {
+        font: "20px Arial",
+        fontLarge: "40px Arial",
+        textColor: "#fff",
+        livesColor: "#ff6b6b",
+        shieldColor: "#4ecdc4",
+        gameOverBg: "rgba(0, 0, 0, 0.7)",
+        hudOffset: { scoreY: -15, livesY: -40, gameOverTitleY: -20, gameOverScoreY: 20, gameOverRestartY: 60 }
+    }
 };

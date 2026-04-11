@@ -78,7 +78,7 @@ export class Game {
 
   private drawShield(ctx: CanvasRenderingContext2D): void {
     if (this.gameState.hasShield) {
-      ctx.strokeStyle = "#4ecdc4";
+      ctx.strokeStyle = CONFIG.ui.shieldColor;
       ctx.lineWidth = 3;
       ctx.strokeRect(
         this.player.x - 3,
@@ -94,38 +94,38 @@ export class Game {
   }
 
   drawScore(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "#fff";
-    ctx.font = "20px Arial";
-    ctx.fillText("Score: " + this.gameState.score, 10, this.hudHeight - 15);
+    ctx.fillStyle = CONFIG.ui.textColor;
+    ctx.font = CONFIG.ui.font;
+    ctx.fillText("Score: " + this.gameState.score, 10, this.hudHeight + CONFIG.ui.hudOffset.scoreY);
   }
 
   drawLives(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "#ff6b6b";
-    ctx.font = "20px Arial";
-    ctx.fillText("Lives: " + this.gameState.lives, 10, this.hudHeight - 40);
+    ctx.fillStyle = CONFIG.ui.livesColor;
+    ctx.font = CONFIG.ui.font;
+    ctx.fillText("Lives: " + this.gameState.lives, 10, this.hudHeight + CONFIG.ui.hudOffset.livesY);
   }
 
   drawGameOver(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillStyle = CONFIG.ui.gameOverBg;
     ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    ctx.fillStyle = "#fff";
-    ctx.font = "40px Arial";
+    ctx.fillStyle = CONFIG.ui.textColor;
+    ctx.font = CONFIG.ui.fontLarge;
     ctx.textAlign = "center";
     ctx.fillText(
       "GAME OVER",
       this.canvas.width / 2,
-      this.canvas.height / 2 - 20,
+      this.canvas.height / 2 + CONFIG.ui.hudOffset.gameOverTitleY,
     );
-    ctx.font = "20px Arial";
+    ctx.font = CONFIG.ui.font;
     ctx.fillText(
       "Final Score: " + this.gameState.score,
       this.canvas.width / 2,
-      this.canvas.height / 2 + 20,
+      this.canvas.height / 2 + CONFIG.ui.hudOffset.gameOverScoreY,
     );
     ctx.fillText(
       "Press SPACE to restart",
       this.canvas.width / 2,
-      this.canvas.height / 2 + 60,
+      this.canvas.height / 2 + CONFIG.ui.hudOffset.gameOverRestartY,
     );
     ctx.textAlign = "left";
   }
