@@ -127,6 +127,7 @@ The goal is not to remove side effects — they are needed. The goal is to **kee
 - If a function reads from `this`, a closure, or a global just to do a calculation, consider passing that value as a parameter instead
 - DB calls, I/O, timers, and network calls should wrap pure logic, not be mixed into it
 - Only do this when the change is small and clean; if it's a big structural change, propose it first
+- After extracting a pure function, create a test for it if the test would be straightforward to write
 
 **Before** — logic and DB call are mixed; you can't test the discount rules without hitting the database:
 
@@ -196,4 +197,4 @@ If the changes are large, list what you plan to do first and wait for confirmati
 
 After completing a refactor, propose a commit message in conventional commits format (e.g., `refactor: description`). Do not create the commit — just show the suggested message so the user can commit manually.
 
-Always verify the refactored code passes tests by running `pnpm test`.
+Always verify the refactored code passes tests by running `pnpm run test`.
