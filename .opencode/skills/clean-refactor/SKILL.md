@@ -65,6 +65,59 @@ Refactoring means improving code structure without changing behavior. Priority o
 - **Interface Segregation**: don't force consumers to depend on what they don't use
 - **Dependency Inversion**: depend on abstractions at module boundaries, not concrete implementations
 
+### Primitive Obsession and Value Objects
+
+When a primitive (`string`, `number`) is validated, transformed, or passed around in multiple places, it's carrying domain meaning that deserves its own type.
+
+Symptoms to watch for:
+
+- The same validation logic appears in more than one place
+- A function signature has multiple primitives of the same type — easy to swap by mistake
+- A primitive is always used together with a related check or transformation
+
+The conservative approach: **flag the smell, propose the Value Object, don't apply it unilaterally.** Introducing a Value Object touches constructors, serialization, and tests — it's a design decision, not a mechanical refactor.
+
+**Before** — validation duplicated across functions; `userId` and `email` are both `string` so TypeScript won't catch a swap:
+
+```typescript
+function createUser(userId: string, email: string) {
+  if (!email.includes("@")) throw new Error("Invalid email");
+}
+
+function updateEmail(userId: string, email: string) {
+  if (!email.includes("@")) throw new Error("Invalid email");
+}
+
+createUser("alice@example.com", "usr_123");
+```
+
+**Proposed refactor** — one type that owns its own validation; impossible to confuse with a plain string:
+
+```typescript
+class Email {
+  private constructor(readonly value: string) {}
+
+  static parse(raw: string): Email {
+    if (!raw.includes("@")) throw new Error(`Invalid email: ${raw}`);
+    return new Email(raw);
+  }
+
+  toString() {
+    return this.value;
+  }
+}
+
+function createUser(email: Email, role: string) {
+  /* ... */
+}
+function updateEmail(userId: string, email: Email) {
+  /* ... */
+}
+function sendWelcome(email: Email) {
+  /* ... */
+}
+```
+
 ### Pure functions over impure ones
 
 Prefer pure functions — functions that depend only on their inputs and produce no side effects. They're predictable, composable, and trivial to test.
@@ -76,47 +129,7 @@ The goal isn't to eliminate side effects (they're necessary), but to **isolate t
 - Side effects (DB, I/O, timers, external calls) belong in thin wrappers around pure logic — not mixed into it
 - Only suggest this refactor when the extraction is clean and the scope is small; if the change is structural, propose it rather than applying it silently
 
----
-
-## What NOT to touch
-
-- Code that's already readable and follows these principles
-- Comments the user placed — treat them as intentional decisions
-- Anything where the correct behavior is unclear without more context
-- Performance optimizations that trade readability (unless asked)
-- Style preferences with no clear winner
-
----
-
-## TypeScript/JavaScript specifics
-
-- Prefer `const` over `let`; never use `var`
-- Use optional chaining (`?.`) and nullish coalescing (`??`) instead of manual null checks
-- Prefer `array.find()`, `filter()`, `map()` over imperative loops when it reads more clearly
-- Avoid `any`; use `unknown` + narrowing or proper generics
-- Destructure in function parameters when using 2+ fields from an object
-- Use `as const` for literal objects that shouldn't be widened
-- Prefer discriminated unions over boolean flags for state modeling
-
----
-
-## Output format
-
-Deliver refactored code directly. No explanation unless asked.
-
-If a change could affect behavior, add a single inline note: `// ⚠️ behavioral change: <why>` — the one exception to the no-comments rule.
-
-If the scope is large, list the planned changes first and wait for confirmation.
-
----
-
-## Examples
-
-These before/after pairs are ground truth. When rules above are ambiguous, match this style.
-
-### Pure functions: isolate logic from side effects
-
-**Before** — logic and side effect are tangled; impossible to test the discount calculation without a real order object and a real DB call:
+**Before** — logic and side effect are tangled; impossible to test the discount calculation without a real DB call:
 
 ```typescript
 class OrderService {
@@ -149,3 +162,35 @@ class OrderService {
   }
 }
 ```
+
+---
+
+## What NOT to touch
+
+- Code that's already readable and follows these principles
+- Comments the user placed — treat them as intentional decisions
+- Anything where the correct behavior is unclear without more context
+- Performance optimizations that trade readability (unless asked)
+- Style preferences with no clear winner
+
+---
+
+## TypeScript/JavaScript specifics
+
+- Prefer `const` over `let`; never use `var`
+- Use optional chaining (`?.`) and nullish coalescing (`??`) instead of manual null checks
+- Prefer `array.find()`, `filter()`, `map()` over imperative loops when it reads more clearly
+- Avoid `any`; use `unknown` + narrowing or proper generics
+- Destructure in function parameters when using 2+ fields from an object
+- Use `as const` for literal objects that shouldn't be widened
+- Prefer discriminated unions over boolean flags for state modeling
+
+---
+
+## Output format
+
+Deliver refactored code directly. No explanation unless asked.
+
+If a change could affect behavior, add a single inline note: `// ⚠️ behavioral change: <why>` — the one exception to the no-comments rule.
+
+If the scope is large, list the planned changes first and wait for confirmation.
