@@ -65,6 +65,17 @@ Refactoring means improving code structure without changing behavior. Priority o
 - **Interface Segregation**: don't force consumers to depend on what they don't use
 - **Dependency Inversion**: depend on abstractions at module boundaries, not concrete implementations
 
+### Pure functions over impure ones
+
+Prefer pure functions — functions that depend only on their inputs and produce no side effects. They're predictable, composable, and trivial to test.
+
+The goal isn't to eliminate side effects (they're necessary), but to **isolate them**. Keep logic pure; push effects to the edges of the system.
+
+- Extract logic that doesn't need external state into pure functions
+- If a function reads from `this`, a closure, or a global to do its computation, ask whether that state could be passed as a parameter instead
+- Side effects (DB, I/O, timers, external calls) belong in thin wrappers around pure logic — not mixed into it
+- Only suggest this refactor when the extraction is clean and the scope is small; if the change is structural, propose it rather than applying it silently
+
 ---
 
 ## What NOT to touch
@@ -101,5 +112,40 @@ If the scope is large, list the planned changes first and wait for confirmation.
 
 ## Examples
 
-Examples of before/after refactors are added here as the user provides them.
-They act as the ground truth for style decisions when rules above are ambiguous.
+These before/after pairs are ground truth. When rules above are ambiguous, match this style.
+
+### Pure functions: isolate logic from side effects
+
+**Before** — logic and side effect are tangled; impossible to test the discount calculation without a real order object and a real DB call:
+
+```typescript
+class OrderService {
+  async applyDiscount(orderId: string, userType: string) {
+    const order = await this.db.orders.findById(orderId);
+    if (userType === "premium") {
+      order.total = order.total * 0.9;
+    } else if (order.total > 100) {
+      order.total = order.total * 0.95;
+    }
+    await this.db.orders.save(order);
+  }
+}
+```
+
+**After** — the discount logic is pure and testable in isolation; the impure part is a thin wrapper:
+
+```typescript
+function calculateDiscount(total: number, userType: string): number {
+  if (userType === "premium") return total * 0.9;
+  if (total > 100) return total * 0.95;
+  return total;
+}
+
+class OrderService {
+  async applyDiscount(orderId: string, userType: string) {
+    const order = await this.db.orders.findById(orderId);
+    order.total = calculateDiscount(order.total, userType);
+    await this.db.orders.save(order);
+  }
+}
+```
