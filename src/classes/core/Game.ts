@@ -3,6 +3,7 @@ import { TileMap } from "../systems/TileMap.js";
 import { GameState } from "./GameState.js";
 import { Spawner } from "./Spawner.js";
 import { EntityManager } from "./EntityManager.js";
+import { CONFIG } from "../../config.js";
 
 export class Game {
   player: Player;
@@ -131,14 +132,14 @@ export class Game {
 
   restart(): void {
     this.player.reset({
-      x: 50,
-      y: 200,
-      w: 40,
-      h: 40,
-      speed: 200,
-      hitboxWidth: 40,
-      hitboxHeight: 40,
-      color: "#ff0000",
+      x: CONFIG.player.x,
+      y: CONFIG.player.y,
+      w: CONFIG.player.w,
+      h: CONFIG.player.h,
+      speed: CONFIG.player.speed,
+      hitboxWidth: CONFIG.player.hitboxWidth,
+      hitboxHeight: CONFIG.player.hitboxHeight,
+      color: CONFIG.player.color,
     });
     this.gameState.reset();
     this.spawner.reset();
