@@ -20,7 +20,9 @@
     },
     "peacock.color": "#1a3323",
     "cSpell.words": [
+        "docstrings",
         "hitbox",
+        "Liskov",
         "opencode",
         "Powerup",
         "powerups",
