@@ -1,6 +1,53 @@
 import { Entity } from './Entity.js';
 import { CONFIG } from '../../config.js';
 
+interface SpawnPosition {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+}
+
+export function calculateSpawnPosition(
+    canvasWidth: number,
+    gameHeight: number,
+    size: number,
+    speed: number
+): SpawnPosition {
+    const side = Math.floor(Math.random() * 4);
+    
+    if (side === 0) {
+        return {
+            x: Math.random() * canvasWidth,
+            y: -size,
+            vx: 0,
+            vy: speed
+        };
+    }
+    if (side === 1) {
+        return {
+            x: canvasWidth,
+            y: Math.random() * gameHeight,
+            vx: -speed,
+            vy: 0
+        };
+    }
+    if (side === 2) {
+        return {
+            x: Math.random() * canvasWidth,
+            y: gameHeight,
+            vx: 0,
+            vy: -speed
+        };
+    }
+    return {
+        x: -size,
+        y: Math.random() * gameHeight,
+        vx: speed,
+        vy: 0
+    };
+}
+
 export class Enemy extends Entity {
     vx: number;
     vy: number;
@@ -16,34 +63,11 @@ export class Enemy extends Entity {
 
     constructor(canvas: HTMLCanvasElement, gameHeight: number, speed: number, sprite: HTMLImageElement) {
         const size = CONFIG.enemy.size;
-        const side = Math.floor(Math.random() * 4);
-        let x: number, y: number, vx: number, vy: number;
+        const pos = calculateSpawnPosition(canvas.width, gameHeight, size, speed);
 
-        if (side === 0) {
-            x = Math.random() * canvas.width;
-            y = -size;
-            vx = 0;
-            vy = speed;
-        } else if (side === 1) {
-            x = canvas.width;
-            y = Math.random() * gameHeight;
-            vx = -speed;
-            vy = 0;
-        } else if (side === 2) {
-            x = Math.random() * canvas.width;
-            y = gameHeight;
-            vx = 0;
-            vy = -speed;
-        } else {
-            x = -size;
-            y = Math.random() * gameHeight;
-            vx = speed;
-            vy = 0;
-        }
-
-        super(x, y, size, size, CONFIG.enemy.color);
-        this.vx = vx;
-        this.vy = vy;
+        super(pos.x, pos.y, size, size, CONFIG.enemy.color);
+        this.vx = pos.vx;
+        this.vy = pos.vy;
         this.sprite = sprite;
         this.frameWidth = 16;
         this.frameHeight = 16;
@@ -72,8 +96,9 @@ export class Enemy extends Entity {
     }
 
     isOutOfBounds(canvasWidth: number, gameHeight: number): boolean {
-        return this.x < -50 || this.x > canvasWidth + 50 ||
-               this.y < -50 || this.y > gameHeight + 50;
+        const buffer = CONFIG.enemy.outOfBoundsBuffer;
+        return this.x < -buffer || this.x > canvasWidth + buffer ||
+               this.y < -buffer || this.y > gameHeight + buffer;
     }
 
     draw(ctx: CanvasRenderingContext2D, offsetY: number = 0): void {
