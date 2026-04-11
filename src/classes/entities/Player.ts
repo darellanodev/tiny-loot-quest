@@ -2,6 +2,38 @@ import { Entity } from "./Entity.js";
 import { PlayerConfig } from "../../config.js";
 import { TileMap } from "../systems/TileMap.js";
 
+interface MovementResult {
+  dx: number;
+  dy: number;
+  direction: number;
+  moved: boolean;
+}
+
+export function calculateMovement(keys: Record<string, boolean>, speed: number, delta: number): MovementResult {
+  let dx = 0;
+  let dy = 0;
+  let direction = 0;
+
+  if (keys["ArrowUp"] || keys["w"]) {
+    dy -= speed * delta;
+    direction = 1;
+  }
+  if (keys["ArrowDown"] || keys["s"]) {
+    dy += speed * delta;
+    direction = 0;
+  }
+  if (keys["ArrowLeft"] || keys["a"]) {
+    dx -= speed * delta;
+    direction = 2;
+  }
+  if (keys["ArrowRight"] || keys["d"]) {
+    dx += speed * delta;
+    direction = 3;
+  }
+
+  return { dx, dy, direction, moved: dx !== 0 || dy !== 0 };
+}
+
 export class Player extends Entity {
   private tileMap: TileMap | null = null;
 
@@ -37,8 +69,15 @@ export class Player extends Entity {
   isMoving: boolean;
 
   move(keys: Record<string, boolean>, canvas: HTMLCanvasElement, delta: number, gameHeight: number): void {
-    this.isMoving = false;
-    let moved = false;
+    const { dx, dy, direction, moved } = calculateMovement(keys, this.speed, delta);
+    
+    if (!moved) {
+      this.isMoving = false;
+      return;
+    }
+
+    this.isMoving = true;
+    this.direction = direction;
     
     const checkCollision = (newX: number, newY: number): boolean => {
       if (!this.tileMap) return false;
@@ -50,39 +89,12 @@ export class Player extends Entity {
       ];
       return corners.some(c => this.tileMap!.isColliding(c.x, c.y));
     };
-    
-    let newX = this.x;
-    let newY = this.y;
 
-    if (keys["ArrowUp"] || keys["w"]) {
-      newY -= this.speed * delta;
-      this.direction = 1;
-      moved = true;
-    }
-    if (keys["ArrowDown"] || keys["s"]) {
-      newY += this.speed * delta;
-      this.direction = 0;
-      moved = true;
-    }
-    if (keys["ArrowLeft"] || keys["a"]) {
-      newX -= this.speed * delta;
-      this.direction = 2;
-      moved = true;
-    }
-    if (keys["ArrowRight"] || keys["d"]) {
-      newX += this.speed * delta;
-      this.direction = 3;
-      moved = true;
-    }
+    let newX = Math.max(0, Math.min(canvas.width - this.w, this.x + dx));
+    let newY = Math.max(0, Math.min(gameHeight - this.h, this.y + dy));
 
-    if (moved) {
-      this.isMoving = true;
-      newX = Math.max(0, Math.min(canvas.width - this.w, newX));
-      newY = Math.max(0, Math.min(gameHeight - this.h, newY));
-      
-      if (!checkCollision(newX, this.y)) this.x = newX;
-      if (!checkCollision(this.x, newY)) this.y = newY;
-    }
+    if (!checkCollision(newX, this.y)) this.x = newX;
+    if (!checkCollision(this.x, newY)) this.y = newY;
   }
 
   reset(config: PlayerConfig): void {
