@@ -196,6 +196,14 @@ type CreateUserRequest = Pick<User, "email" | "name">;
 
 ---
 
+## After implementing
+
+Always verify the new code passes tests by running `pnpm run test`.
+
+Once done, propose a commit message in conventional commits format (e.g., `feat: description`). Do not create the commit — just show the suggested message so the user can commit manually.
+
+---
+
 ## Output format
 
 Output the code directly. No explanation unless asked.
