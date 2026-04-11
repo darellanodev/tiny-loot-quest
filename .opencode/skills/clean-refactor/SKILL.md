@@ -193,3 +193,7 @@ Output the refactored code directly. No explanation unless asked.
 If a change could affect behavior, add one inline note: `// ⚠️ behavioral change: <why>` — the only exception to the no-comments rule.
 
 If the changes are large, list what you plan to do first and wait for confirmation.
+
+After completing a refactor, propose a commit message in conventional commits format (e.g., `refactor: description`). Do not create the commit — just show the suggested message so the user can commit manually.
+
+Always verify the refactored code passes tests by running `pnpm test`.
