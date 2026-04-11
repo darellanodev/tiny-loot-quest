@@ -20,17 +20,11 @@ export class EntityManager {
     this.hudHeight = hudHeight;
   }
 
-  createParticles(x: number, y: number, color: string, count: number): void {
-    for (let i = 0; i < count; i++) {
-      this.particles.push(new Particle(x, y, color));
-    }
-  }
-
   update(delta: number, coins: Coin[], enemies: Enemy[], powerups: Powerup[]): void {
     this.updateParticles(delta);
-    this.updateEnemies(delta, enemies);
-    this.updateCoins(coins);
-    this.updatePowerups(powerups);
+    this.processEnemies(delta, enemies);
+    this.processCoins(coins);
+    this.processPowerups(powerups);
   }
 
   private updateParticles(delta: number): void {
@@ -42,60 +36,54 @@ export class EntityManager {
     }
   }
 
-  private updateEnemies(delta: number, enemies: Enemy[]): void {
+  private processEnemies(delta: number, enemies: Enemy[]): void {
+    const bounds = this.player.y + this.hudHeight + this.player.h;
     for (let i = enemies.length - 1; i >= 0; i--) {
       enemies[i].update(delta);
-      if (enemies[i].isOutOfBounds(this.canvas.width, this.player.y + this.hudHeight + this.player.h)) {
+      if (enemies[i].isOutOfBounds(this.canvas.width, bounds)) {
         enemies.splice(i, 1);
         continue;
       }
       if (this.player.collidesWith(enemies[i])) {
-        const isDead = this.gameState.takeDamage();
-        if (!this.gameState.hasShield) {
-          this.createParticles(
-            this.player.x + this.player.w / 2,
-            this.player.y + this.player.h / 2,
-            CONFIG.enemy.color,
-            CONFIG.particle.defaultCount + 5
-          );
-        }
+        this.handleEnemyCollision();
         enemies.splice(i, 1);
-        if (isDead) {
-          this.gameState.gameOver = true;
-        }
       }
     }
   }
 
-  private updateCoins(coins: Coin[]): void {
+  private processCoins(coins: Coin[]): void {
     for (let i = coins.length - 1; i >= 0; i--) {
       coins[i].update();
       if (this.player.collidesWith(coins[i])) {
         this.gameState.collectCoin();
-        this.createParticles(
-          coins[i].x + coins[i].w / 2,
-          coins[i].y + coins[i].h / 2,
-          CONFIG.coin.color,
-          CONFIG.particle.defaultCount
-        );
+        this.spawnParticles(coins[i].x + coins[i].w / 2, coins[i].y + coins[i].h / 2, CONFIG.coin.color);
         coins.splice(i, 1);
       }
     }
   }
 
-  private updatePowerups(powerups: Powerup[]): void {
+  private processPowerups(powerups: Powerup[]): void {
     for (let i = powerups.length - 1; i >= 0; i--) {
       powerups[i].update();
       if (this.player.collidesWith(powerups[i])) {
         this.gameState.activateShield(CONFIG.powerup.shieldDuration);
-        this.createParticles(
-          powerups[i].x + powerups[i].w / 2,
-          powerups[i].y + powerups[i].h / 2,
-          CONFIG.powerup.color,
-          CONFIG.particle.defaultCount + 5
-        );
+        this.spawnParticles(powerups[i].x + powerups[i].w / 2, powerups[i].y + powerups[i].h / 2, CONFIG.powerup.color, CONFIG.particle.defaultCount + 5);
         powerups.splice(i, 1);
       }
+    }
+  }
+
+  private handleEnemyCollision(): void {
+    const isDead = this.gameState.takeDamage();
+    if (!this.gameState.hasShield) {
+      this.spawnParticles(this.player.x + this.player.w / 2, this.player.y + this.player.h / 2, CONFIG.enemy.color, CONFIG.particle.defaultCount + 5);
+    }
+    if (isDead) this.gameState.gameOver = true;
+  }
+
+  private spawnParticles(x: number, y: number, color: string, count = CONFIG.particle.defaultCount): void {
+    for (let i = 0; i < count; i++) {
+      this.particles.push(new Particle(x, y, color));
     }
   }
 
