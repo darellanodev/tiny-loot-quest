@@ -99,6 +99,12 @@ export class Game {
     ctx.fillText("Score: " + this.gameState.score, 10, this.hudHeight + CONFIG.ui.hudOffset.scoreY);
   }
 
+  drawPlayerCoords(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = CONFIG.ui.textColor;
+    ctx.font = CONFIG.ui.font;
+    ctx.fillText(`Pos: ${Math.round(this.player.x)}, ${Math.round(this.player.y)}`, 10, this.hudHeight + CONFIG.ui.hudOffset.scoreY + 20);
+  }
+
   drawLives(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = CONFIG.ui.livesColor;
     ctx.font = CONFIG.ui.font;

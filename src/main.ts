@@ -65,6 +65,7 @@ function loop(currentTime: number): void {
   game.draw(ctx);
   game.drawHud(ctx, hudImage);
   game.drawScore(ctx);
+  game.drawPlayerCoords(ctx);
   game.drawLives(ctx);
   if (game.gameOver) {
     game.drawGameOver(ctx);
