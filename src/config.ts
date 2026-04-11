@@ -10,6 +10,7 @@ export interface PlayerConfig extends EntityConfig {
     speed: number;
     hitboxWidth: number;
     hitboxHeight: number;
+    initialDirection?: number;
 }
 
 export interface CoinConfig {
@@ -84,14 +85,15 @@ export const CONFIG: Config = {
     canvas: { width: 600, height: 400 },
     background: '#1a1a2e',
     player: {
-        x: 280,
-        y: 220,
+        x: 207,
+        y: 142,
         w: 16,
         h: 16,
         hitboxWidth: 10,
         hitboxHeight: 12,
         color: '#00d4ff',
-        speed: 1
+        speed: 1,
+        initialDirection: 0
     },
     coin: { size: 11, color: '#ffd700', spawnInterval: 120 },
     enemy: { size: 16, hitboxWidth: 8, color: '#ff4444', baseSpawnInterval: 90, minSpawnInterval: 30, outOfBoundsBuffer: 50 },

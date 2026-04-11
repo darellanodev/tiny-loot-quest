@@ -48,7 +48,7 @@ export class Player extends Entity {
     this.currentFrame = 0;
     this.frameTimer = 0;
     this.frameDelay = 10;
-    this.direction = 0;
+    this.direction = config.initialDirection ?? 0;
     this.isMoving = false;
   }
 
