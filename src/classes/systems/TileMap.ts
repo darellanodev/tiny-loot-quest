@@ -19,6 +19,18 @@ export interface Tile {
     y: number;
 }
 
+function calculateTileCoords(x: number, y: number, tileSize: number): { tileX: number; tileY: number } {
+    return {
+        tileX: Math.floor(x / tileSize),
+        tileY: Math.floor(y / tileSize)
+    };
+}
+
+function isTileColliding(collisionTiles: Set<string>, x: number, y: number, tileSize: number): boolean {
+    const { tileX, tileY } = calculateTileCoords(x, y, tileSize);
+    return collisionTiles.has(`${tileX},${tileY}`);
+}
+
 export class TileMap {
     private data: TileMapData;
     private tilesetImage: HTMLImageElement;
@@ -54,9 +66,7 @@ export class TileMap {
     }
 
     isColliding(x: number, y: number): boolean {
-        const tileX = Math.floor(x / this.tileSize);
-        const tileY = Math.floor(y / this.tileSize);
-        return this.collisionTiles.has(`${tileX},${tileY}`);
+        return isTileColliding(this.collisionTiles, x, y, this.tileSize);
     }
 
     draw(ctx: CanvasRenderingContext2D, offsetY: number = 0): void {
