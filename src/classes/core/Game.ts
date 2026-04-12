@@ -57,9 +57,9 @@ export class Game {
     this.spawner.update(delta, this.gameState.score);
     this.entityManager.update(
       delta,
-      this.spawner.getCoins(),
-      this.spawner.getEnemies(),
-      this.spawner.getPowerups(),
+      this.spawner.coins,
+      this.spawner.enemies,
+      this.spawner.powerups,
     );
   }
 
@@ -71,9 +71,9 @@ export class Game {
   }
 
   private drawEntities(ctx: CanvasRenderingContext2D): void {
-    this.spawner.getCoins().forEach((c) => c.draw(ctx, this.hudHeight));
-    this.spawner.getEnemies().forEach((e) => e.draw(ctx, this.hudHeight));
-    this.spawner.getPowerups().forEach((p) => p.draw(ctx, this.hudHeight));
+    this.spawner.coins.forEach((c) => c.draw(ctx, this.hudHeight));
+    this.spawner.enemies.forEach((e) => e.draw(ctx, this.hudHeight));
+    this.spawner.powerups.forEach((p) => p.draw(ctx, this.hudHeight));
     this.entityManager.draw(ctx);
   }
 

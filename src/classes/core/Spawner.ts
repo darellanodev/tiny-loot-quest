@@ -17,9 +17,9 @@ export class Spawner {
   private enemySpeed: number;
   private tileMap: TileMap | null = null;
 
-  private coins: Coin[] = [];
-  private enemies: Enemy[] = [];
-  private powerups: Powerup[] = [];
+  private _coins: Coin[] = [];
+  private _enemies: Enemy[] = [];
+  private _powerups: Powerup[] = [];
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -41,16 +41,16 @@ export class Spawner {
   }
 
   spawnCoin(): void {
-    this.coins.push(new Coin(this.canvas, this.gameHeight, this.coinImage, this.tileMap));
+    this._coins.push(new Coin(this.canvas, this.gameHeight, this.coinImage, this.tileMap));
   }
 
   spawnEnemy(): void {
     const enemy = new Enemy(this.canvas, this.gameHeight, this.enemySpeed, this.enemyImage, this.tileMap);
-    this.enemies.push(enemy);
+    this._enemies.push(enemy);
   }
 
   spawnPowerup(): void {
-    this.powerups.push(new Powerup(this.canvas, this.gameHeight, this.powerupImage, this.tileMap));
+    this._powerups.push(new Powerup(this.canvas, this.gameHeight, this.powerupImage, this.tileMap));
   }
 
   update(delta: number, score: number): void {
@@ -76,24 +76,24 @@ export class Spawner {
     }
   }
 
-  getCoins(): Coin[] {
-    return this.coins;
+  get coins(): Coin[] {
+    return this._coins;
   }
 
-  getEnemies(): Enemy[] {
-    return this.enemies;
+  get enemies(): Enemy[] {
+    return this._enemies;
   }
 
-  getPowerups(): Powerup[] {
-    return this.powerups;
+  get powerups(): Powerup[] {
+    return this._powerups;
   }
 
   reset(): void {
     this.coinTimer = 0;
     this.enemyTimer = 0;
     this.powerupTimer = 0;
-    this.coins = [];
-    this.enemies = [];
-    this.powerups = [];
+    this._coins = [];
+    this._enemies = [];
+    this._powerups = [];
   }
 }
