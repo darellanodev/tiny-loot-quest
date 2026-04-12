@@ -26,6 +26,7 @@ export interface EnemyConfig {
     baseSpawnInterval: number;
     minSpawnInterval: number;
     outOfBoundsBuffer: number;
+    speed: number;
 }
 
 export interface PowerupConfig {
@@ -96,7 +97,7 @@ export const CONFIG: Config = {
         initialDirection: 0
     },
     coin: { size: 11, color: '#ffd700', spawnInterval: 120 },
-    enemy: { size: 16, hitboxWidth: 8, color: '#ff4444', baseSpawnInterval: 90, minSpawnInterval: 30, outOfBoundsBuffer: 50 },
+    enemy: { size: 16, hitboxWidth: 8, color: '#ff4444', baseSpawnInterval: 90, minSpawnInterval: 30, outOfBoundsBuffer: 50, speed: 0.3 },
     powerup: { size: 16, color: '#00ff88', spawnInterval: 600, shieldDuration: 300 },
     particle: { defaultCount: 10 },
     initialLives: 3,

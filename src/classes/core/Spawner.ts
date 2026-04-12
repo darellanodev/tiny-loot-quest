@@ -31,7 +31,7 @@ export class Spawner {
     this.coinImage = coinImage;
     this.enemyImage = enemyImage;
     this.powerupImage = powerupImage;
-    this.enemySpeed = 0.3;
+    this.enemySpeed = CONFIG.enemy.speed;
   }
 
   spawnCoin(): void {
