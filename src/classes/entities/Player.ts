@@ -82,10 +82,8 @@ export class Player extends Entity {
     this.direction = direction;
     
     const checkCollision = (newX: number, newY: number): boolean => {
-      if (!this.tileMap) return false;
       return this.collisionChecker.checkEntityCollision(
-        newX, newY, this.w, this.h,
-        (x, y) => this.tileMap!.isColliding(x, y)
+        newX, newY, this.w, this.h, this.tileMap
       );
     };
 
