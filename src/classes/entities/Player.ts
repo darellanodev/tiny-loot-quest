@@ -38,7 +38,7 @@ export class Player extends Entity {
   private tileMap: TileMap | null = null;
 
   constructor(config: PlayerConfig, image: HTMLImageElement) {
-    super(config.x, config.y, config.w, config.h, config.color);
+    super(config.x, config.y, config.w, config.color);
     this.speed = config.speed;
     this.sprite = image;
     this.frameWidth = 16;

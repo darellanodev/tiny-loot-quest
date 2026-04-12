@@ -117,7 +117,7 @@ export class Enemy extends Entity {
         const size = CONFIG.enemy.size;
         const pos = calculateSpawnPosition(canvas.width, gameHeight, size, speed, tileMap);
 
-        super(pos.x, pos.y, size, size, CONFIG.enemy.color);
+        super(pos.x, pos.y, size, CONFIG.enemy.color);
         this.vx = pos.vx;
         this.vy = pos.vy;
         this.sprite = sprite;

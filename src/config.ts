@@ -17,6 +17,14 @@ export interface CoinConfig {
     size: number;
     color: string;
     spawnInterval: number;
+    animation: {
+        frameWidth: number;
+        frameHeight: number;
+        sheetColumns: number;
+        sheetRows: number;
+        frameDelay: number;
+        waitDelay: number;
+    };
 }
 
 export interface EnemyConfig {
@@ -34,6 +42,14 @@ export interface PowerupConfig {
     color: string;
     spawnInterval: number;
     shieldDuration: number;
+    animation: {
+        frameWidth: number;
+        frameHeight: number;
+        sheetColumns: number;
+        sheetRows: number;
+        frameDelay: number;
+        waitDelay: number;
+    };
 }
 
 export interface ParticleConfig {
@@ -97,9 +113,9 @@ export const CONFIG: Config = {
         speed: 1,
         initialDirection: 0
     },
-    coin: { size: 11, color: '#ffd700', spawnInterval: 120 },
+    coin: { size: 11, color: '#ffd700', spawnInterval: 120, animation: { frameWidth: 11, frameHeight: 11, sheetColumns: 3, sheetRows: 1, frameDelay: 30, waitDelay: 90 } },
     enemy: { size: 16, hitboxWidth: 8, color: '#ff4444', baseSpawnInterval: 90, minSpawnInterval: 30, outOfBoundsBuffer: 50, speed: 0.3 },
-    powerup: { size: 16, color: '#00ff88', spawnInterval: 600, shieldDuration: 300 },
+    powerup: { size: 16, color: '#00ff88', spawnInterval: 600, shieldDuration: 300, animation: { frameWidth: 16, frameHeight: 16, sheetColumns: 3, sheetRows: 1, frameDelay: 30, waitDelay: 180 } },
     particle: { defaultCount: 10 },
     initialLives: 3,
     difficulty: { base: 0.3, increment: 0.05, scorePerLevel: 5, spawnDecreasePerScore: 2 },

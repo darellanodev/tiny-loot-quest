@@ -4,12 +4,17 @@ import { Powerup } from "../entities/Powerup.js";
 import { TileMap } from "../systems/TileMap.js";
 import { CONFIG } from "../../config.js";
 
+export interface Position {
+  x: number;
+  y: number;
+}
+
 export function getValidPosition(
   canvas: HTMLCanvasElement,
   gameHeight: number,
   size: number,
   tileMap: TileMap | null
-): { x: number; y: number } {
+): Position {
   const maxAttempts = 100;
 
   if (!tileMap) {

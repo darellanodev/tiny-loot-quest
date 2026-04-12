@@ -1,4 +1,5 @@
 import { Entity } from './Entity.js';
+import { Position } from '../core/Spawner.js';
 
 export class AnimatedEntity extends Entity {
   sprite: HTMLImageElement;
@@ -13,8 +14,21 @@ export class AnimatedEntity extends Entity {
   waitDelay: number;
   isAnimating: boolean;
 
-  constructor(x: number, y: number, w: number, h: number, color: string, sprite: HTMLImageElement, frameWidth: number, frameHeight: number, sheetColumns: number, sheetRows: number, frameDelay: number, waitDelay: number) {
-    super(x, y, w, h, color);
+  constructor(
+    position: Position,
+    size: number,
+    color: string,
+    sprite: HTMLImageElement,
+    { frameWidth, frameHeight, sheetColumns, sheetRows, frameDelay, waitDelay }: {
+      frameWidth: number;
+      frameHeight: number;
+      sheetColumns: number;
+      sheetRows: number;
+      frameDelay: number;
+      waitDelay: number;
+    }
+  ) {
+    super(position.x, position.y, size, color);
     this.sprite = sprite;
     this.frameWidth = frameWidth;
     this.frameHeight = frameHeight;

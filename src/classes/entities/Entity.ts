@@ -9,10 +9,12 @@ export class Entity {
     constructor(
         public x: number,
         public y: number,
-        public w: number,
-        public h: number,
+        public size: number,
         public color: string
     ) {}
+
+    get w(): number { return this.size; }
+    get h(): number { return this.size; }
 
     collidesWith(other: Entity): boolean {
         return checkAABBCollision(this.x, this.y, this.w, this.h, other.x, other.y, other.w, other.h);
