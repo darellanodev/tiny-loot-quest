@@ -4,6 +4,35 @@ import { Powerup } from "../entities/Powerup.js";
 import { TileMap } from "../systems/TileMap.js";
 import { CONFIG } from "../../config.js";
 
+export function getValidPosition(
+  canvas: HTMLCanvasElement,
+  gameHeight: number,
+  size: number,
+  tileMap: TileMap | null
+): { x: number; y: number } {
+  const maxAttempts = 100;
+
+  if (!tileMap) {
+    return {
+      x: Math.random() * (canvas.width - size),
+      y: Math.random() * (gameHeight - size),
+    };
+  }
+
+  for (let i = 0; i < maxAttempts; i++) {
+    const x = Math.random() * (canvas.width - size);
+    const y = Math.random() * (gameHeight - size);
+    if (!tileMap.isColliding(x + size / 2, y + size / 2)) {
+      return { x, y };
+    }
+  }
+
+  return {
+    x: Math.random() * (canvas.width - size),
+    y: Math.random() * (gameHeight - size),
+  };
+}
+
 export class Spawner {
   private coinTimer = 0;
   private enemyTimer = 0;

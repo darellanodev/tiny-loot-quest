@@ -1,31 +1,7 @@
 import { Entity } from './Entity.js';
 import { CONFIG } from '../../config.js';
 import { TileMap } from '../systems/TileMap.js';
-
-export function getValidPowerupPosition(canvas: HTMLCanvasElement, gameHeight: number, tileMap: TileMap | null): { x: number; y: number } {
-    const size = CONFIG.powerup.size;
-    const maxAttempts = 100;
-
-    if (!tileMap) {
-        return {
-            x: Math.random() * (canvas.width - size),
-            y: Math.random() * (gameHeight - size)
-        };
-    }
-
-    for (let i = 0; i < maxAttempts; i++) {
-        const x = Math.random() * (canvas.width - size);
-        const y = Math.random() * (gameHeight - size);
-        if (!tileMap.isColliding(x + size / 2, y + size / 2)) {
-            return { x, y };
-        }
-    }
-
-    return {
-        x: Math.random() * (canvas.width - size),
-        y: Math.random() * (gameHeight - size)
-    };
-}
+import { getValidPosition } from '../core/Spawner.js';
 
 export class Powerup extends Entity {
     sprite: HTMLImageElement;
@@ -42,7 +18,7 @@ export class Powerup extends Entity {
 
     constructor(canvas: HTMLCanvasElement, gameHeight: number, sprite: HTMLImageElement, tileMap: TileMap | null = null) {
         const size = CONFIG.powerup.size;
-        const pos = getValidPowerupPosition(canvas, gameHeight, tileMap);
+        const pos = getValidPosition(canvas, gameHeight, size, tileMap);
         super(pos.x, pos.y, size, size, CONFIG.powerup.color);
         this.sprite = sprite;
         this.frameWidth = 16;
