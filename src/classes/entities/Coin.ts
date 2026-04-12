@@ -1,76 +1,12 @@
-import { Entity } from './Entity.js';
+import { AnimatedEntity } from './AnimatedEntity.js';
 import { CONFIG } from '../../config.js';
 import { TileMap } from '../systems/TileMap.js';
 import { getValidPosition } from '../core/Spawner.js';
 
-export class Coin extends Entity {
-    sprite: HTMLImageElement;
-    frameWidth: number;
-    frameHeight: number;
-    sheetColumns: number;
-    sheetRows: number;
-    currentFrame: number;
-    frameTimer: number;
-    frameDelay: number;
-    waitTimer: number;
-    waitDelay: number;
-    isAnimating: boolean;
-
-    constructor(canvas: HTMLCanvasElement, gameHeight: number, sprite: HTMLImageElement, tileMap: TileMap | null = null) {
-        const size = CONFIG.coin.size;
-        const pos = getValidPosition(canvas, gameHeight, size, tileMap);
-        super(pos.x, pos.y, size, size, CONFIG.coin.color);
-        this.sprite = sprite;
-        this.frameWidth = 11;
-        this.frameHeight = 11;
-        this.sheetColumns = 3;
-        this.sheetRows = 1;
-        this.currentFrame = 0;
-        this.frameTimer = 0;
-        this.frameDelay = 30;
-        this.waitTimer = 0;
-        this.waitDelay = 90;
-        this.isAnimating = true;
-    }
-
-    update(): void {
-        if (this.isAnimating) {
-            this.frameTimer++;
-            if (this.frameTimer >= this.frameDelay) {
-                this.frameTimer = 0;
-                this.currentFrame++;
-                if (this.currentFrame >= this.sheetColumns) {
-                    this.currentFrame = 0;
-                    this.isAnimating = false;
-                }
-            }
-        } else {
-            this.waitTimer++;
-            if (this.waitTimer >= this.waitDelay) {
-                this.waitTimer = 0;
-                this.isAnimating = true;
-            }
-        }
-    }
-
-    draw(ctx: CanvasRenderingContext2D, offsetY: number = 0): void {
-        if (this.sprite.complete && this.sprite.naturalWidth !== 0) {
-            const frameX = this.currentFrame * this.frameWidth;
-            const frameY = 0;
-            ctx.drawImage(
-                this.sprite,
-                frameX,
-                frameY,
-                this.frameWidth,
-                this.frameHeight,
-                this.x,
-                this.y + offsetY,
-                this.w,
-                this.h
-            );
-        } else {
-            ctx.fillStyle = this.color;
-            ctx.fillRect(this.x, this.y + offsetY, this.w, this.h);
-        }
-    }
+export class Coin extends AnimatedEntity {
+  constructor(canvas: HTMLCanvasElement, gameHeight: number, sprite: HTMLImageElement, tileMap: TileMap | null = null) {
+    const size = CONFIG.coin.size;
+    const pos = getValidPosition(canvas, gameHeight, size, tileMap);
+    super(pos.x, pos.y, size, size, CONFIG.coin.color, sprite, 11, 11, 3, 1, 30, 90);
+  }
 }
