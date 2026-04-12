@@ -113,7 +113,6 @@ export class Enemy extends Entity {
 
     setTileMap(tileMap: TileMap): void {
         this.tileMap = tileMap;
-        this.collisionChecker.setTileMap(tileMap);
     }
 
     constructor(canvas: HTMLCanvasElement, gameHeight: number, speed: number, sprite: HTMLImageElement, tileMap: TileMap | null = null) {
@@ -133,12 +132,15 @@ export class Enemy extends Entity {
         this.frameDelay = 10;
         this.direction = 0;
         this.tileMap = tileMap;
-        if (tileMap) this.collisionChecker.setTileMap(tileMap);
     }
 
     update(delta: number): void {
         const checkCollision = (newX: number, newY: number): boolean => {
-            return this.collisionChecker.checkEntityCollision(newX, newY, this.w, this.h);
+            if (!this.tileMap) return false;
+            return this.collisionChecker.checkEntityCollision(
+                newX, newY, this.w, this.h,
+                (x, y) => this.tileMap!.isColliding(x, y)
+            );
         };
 
         const tryChangeDirection = (): void => {

@@ -56,7 +56,6 @@ export class Player extends Entity {
 
   setTileMap(tileMap: TileMap): void {
     this.tileMap = tileMap;
-    this.collisionChecker.setTileMap(tileMap);
   }
 
   speed: number;
@@ -83,7 +82,11 @@ export class Player extends Entity {
     this.direction = direction;
     
     const checkCollision = (newX: number, newY: number): boolean => {
-      return this.collisionChecker.checkEntityCollision(newX, newY, this.w, this.h);
+      if (!this.tileMap) return false;
+      return this.collisionChecker.checkEntityCollision(
+        newX, newY, this.w, this.h,
+        (x, y) => this.tileMap!.isColliding(x, y)
+      );
     };
 
     let newX = Math.max(0, Math.min(canvas.width - this.w, this.x + dx));
