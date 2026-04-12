@@ -40,6 +40,7 @@ export class Game {
       enemyImage,
       powerupImage,
     );
+    this.spawner.setTileMap(tileMap);
     this.entityManager = new EntityManager(
       player,
       this.gameState,

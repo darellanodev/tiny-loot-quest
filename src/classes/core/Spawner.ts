@@ -1,6 +1,7 @@
 import { Coin } from "../entities/Coin.js";
 import { Enemy } from "../entities/Enemy.js";
 import { Powerup } from "../entities/Powerup.js";
+import { TileMap } from "../systems/TileMap.js";
 import { CONFIG } from "../../config.js";
 
 export class Spawner {
@@ -14,6 +15,7 @@ export class Spawner {
   private enemyImage: HTMLImageElement;
   private powerupImage: HTMLImageElement;
   private enemySpeed: number;
+  private tileMap: TileMap | null = null;
 
   private coins: Coin[] = [];
   private enemies: Enemy[] = [];
@@ -34,12 +36,20 @@ export class Spawner {
     this.enemySpeed = CONFIG.enemy.speed;
   }
 
+  setTileMap(tileMap: TileMap): void {
+    this.tileMap = tileMap;
+  }
+
   spawnCoin(): void {
     this.coins.push(new Coin(this.canvas, this.gameHeight, this.coinImage));
   }
 
   spawnEnemy(): void {
-    this.enemies.push(new Enemy(this.canvas, this.gameHeight, this.enemySpeed, this.enemyImage));
+    const enemy = new Enemy(this.canvas, this.gameHeight, this.enemySpeed, this.enemyImage);
+    if (this.tileMap) {
+      enemy.setTileMap(this.tileMap);
+    }
+    this.enemies.push(enemy);
   }
 
   spawnPowerup(): void {
