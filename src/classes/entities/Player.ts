@@ -1,6 +1,7 @@
 import { Entity } from "./Entity.js";
 import { PlayerConfig } from "../../config.js";
 import { TileMap } from "../systems/TileMap.js";
+import { CollisionChecker } from "../systems/CollisionChecker.js";
 
 interface MovementResult {
   dx: number;
@@ -36,6 +37,7 @@ export function calculateMovement(keys: Record<string, boolean>, speed: number, 
 
 export class Player extends Entity {
   private tileMap: TileMap | null = null;
+  private collisionChecker: CollisionChecker = new CollisionChecker();
 
   constructor(config: PlayerConfig, image: HTMLImageElement) {
     super(config.x, config.y, config.w, config.color);
@@ -54,6 +56,7 @@ export class Player extends Entity {
 
   setTileMap(tileMap: TileMap): void {
     this.tileMap = tileMap;
+    this.collisionChecker.setTileMap(tileMap);
   }
 
   speed: number;
@@ -80,14 +83,7 @@ export class Player extends Entity {
     this.direction = direction;
     
     const checkCollision = (newX: number, newY: number): boolean => {
-      if (!this.tileMap) return false;
-      const corners = [
-        { x: newX, y: newY },
-        { x: newX + this.w - 0.1, y: newY },
-        { x: newX, y: newY + this.h - 0.1 },
-        { x: newX + this.w - 0.1, y: newY + this.h - 0.1 }
-      ];
-      return corners.some(c => this.tileMap!.isColliding(c.x, c.y));
+      return this.collisionChecker.checkEntityCollision(newX, newY, this.w, this.h);
     };
 
     let newX = Math.max(0, Math.min(canvas.width - this.w, this.x + dx));

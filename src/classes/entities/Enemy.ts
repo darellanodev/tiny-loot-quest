@@ -1,6 +1,7 @@
 import { Entity } from './Entity.js';
 import { CONFIG } from '../../config.js';
 import { TileMap } from '../systems/TileMap.js';
+import { CollisionChecker } from '../systems/CollisionChecker.js';
 
 interface SpawnPosition {
     x: number;
@@ -97,6 +98,7 @@ function calculateSpawnPositionFallback(
 
 export class Enemy extends Entity {
     private tileMap: TileMap | null = null;
+    private collisionChecker: CollisionChecker = new CollisionChecker();
     vx: number;
     vy: number;
     sprite: HTMLImageElement;
@@ -111,6 +113,7 @@ export class Enemy extends Entity {
 
     setTileMap(tileMap: TileMap): void {
         this.tileMap = tileMap;
+        this.collisionChecker.setTileMap(tileMap);
     }
 
     constructor(canvas: HTMLCanvasElement, gameHeight: number, speed: number, sprite: HTMLImageElement, tileMap: TileMap | null = null) {
@@ -130,18 +133,12 @@ export class Enemy extends Entity {
         this.frameDelay = 10;
         this.direction = 0;
         this.tileMap = tileMap;
+        if (tileMap) this.collisionChecker.setTileMap(tileMap);
     }
 
     update(delta: number): void {
         const checkCollision = (newX: number, newY: number): boolean => {
-            if (!this.tileMap) return false;
-            const corners = [
-                { x: newX, y: newY },
-                { x: newX + this.w - 0.1, y: newY },
-                { x: newX, y: newY + this.h - 0.1 },
-                { x: newX + this.w - 0.1, y: newY + this.h - 0.1 }
-            ];
-            return corners.some(c => this.tileMap!.isColliding(c.x, c.y));
+            return this.collisionChecker.checkEntityCollision(newX, newY, this.w, this.h);
         };
 
         const tryChangeDirection = (): void => {
