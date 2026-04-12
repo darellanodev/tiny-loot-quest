@@ -41,19 +41,16 @@ export class Spawner {
   }
 
   spawnCoin(): void {
-    this.coins.push(new Coin(this.canvas, this.gameHeight, this.coinImage));
+    this.coins.push(new Coin(this.canvas, this.gameHeight, this.coinImage, this.tileMap));
   }
 
   spawnEnemy(): void {
-    const enemy = new Enemy(this.canvas, this.gameHeight, this.enemySpeed, this.enemyImage);
-    if (this.tileMap) {
-      enemy.setTileMap(this.tileMap);
-    }
+    const enemy = new Enemy(this.canvas, this.gameHeight, this.enemySpeed, this.enemyImage, this.tileMap);
     this.enemies.push(enemy);
   }
 
   spawnPowerup(): void {
-    this.powerups.push(new Powerup(this.canvas, this.gameHeight, this.powerupImage));
+    this.powerups.push(new Powerup(this.canvas, this.gameHeight, this.powerupImage, this.tileMap));
   }
 
   update(delta: number, score: number): void {

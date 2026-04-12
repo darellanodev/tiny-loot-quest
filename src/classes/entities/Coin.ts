@@ -1,5 +1,31 @@
 import { Entity } from './Entity.js';
 import { CONFIG } from '../../config.js';
+import { TileMap } from '../systems/TileMap.js';
+
+export function getValidCoinPosition(canvas: HTMLCanvasElement, gameHeight: number, tileMap: TileMap | null): { x: number; y: number } {
+    const size = CONFIG.coin.size;
+    const maxAttempts = 100;
+
+    if (!tileMap) {
+        return {
+            x: Math.random() * (canvas.width - size),
+            y: Math.random() * (gameHeight - size)
+        };
+    }
+
+    for (let i = 0; i < maxAttempts; i++) {
+        const x = Math.random() * (canvas.width - size);
+        const y = Math.random() * (gameHeight - size);
+        if (!tileMap.isColliding(x + size / 2, y + size / 2)) {
+            return { x, y };
+        }
+    }
+
+    return {
+        x: Math.random() * (canvas.width - size),
+        y: Math.random() * (gameHeight - size)
+    };
+}
 
 export class Coin extends Entity {
     sprite: HTMLImageElement;
@@ -14,15 +40,10 @@ export class Coin extends Entity {
     waitDelay: number;
     isAnimating: boolean;
 
-    constructor(canvas: HTMLCanvasElement, gameHeight: number, sprite: HTMLImageElement) {
+    constructor(canvas: HTMLCanvasElement, gameHeight: number, sprite: HTMLImageElement, tileMap: TileMap | null = null) {
         const size = CONFIG.coin.size;
-        super(
-            Math.random() * (canvas.width - size),
-            Math.random() * (gameHeight - size),
-            size,
-            size,
-            CONFIG.coin.color
-        );
+        const pos = getValidCoinPosition(canvas, gameHeight, tileMap);
+        super(pos.x, pos.y, size, size, CONFIG.coin.color);
         this.sprite = sprite;
         this.frameWidth = 11;
         this.frameHeight = 11;

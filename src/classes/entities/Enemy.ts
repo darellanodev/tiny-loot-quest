@@ -13,6 +13,52 @@ export function calculateSpawnPosition(
     canvasWidth: number,
     gameHeight: number,
     size: number,
+    speed: number,
+    tileMap: TileMap | null
+): SpawnPosition {
+    if (!tileMap) {
+        return calculateSpawnPositionFallback(canvasWidth, gameHeight, size, speed);
+    }
+
+    const maxAttempts = 100;
+    for (let i = 0; i < maxAttempts; i++) {
+        const side = Math.floor(Math.random() * 4);
+        let x: number, y: number, vx: number, vy: number;
+
+        if (side === 0) {
+            x = Math.random() * canvasWidth;
+            y = -size;
+            vx = 0;
+            vy = speed;
+        } else if (side === 1) {
+            x = canvasWidth;
+            y = Math.random() * gameHeight;
+            vx = -speed;
+            vy = 0;
+        } else if (side === 2) {
+            x = Math.random() * canvasWidth;
+            y = gameHeight;
+            vx = 0;
+            vy = -speed;
+        } else {
+            x = -size;
+            y = Math.random() * gameHeight;
+            vx = speed;
+            vy = 0;
+        }
+
+        if (!tileMap.isColliding(x + size / 2, y + size / 2)) {
+            return { x, y, vx, vy };
+        }
+    }
+
+    return calculateSpawnPositionFallback(canvasWidth, gameHeight, size, speed);
+}
+
+function calculateSpawnPositionFallback(
+    canvasWidth: number,
+    gameHeight: number,
+    size: number,
     speed: number
 ): SpawnPosition {
     const side = Math.floor(Math.random() * 4);
@@ -67,9 +113,9 @@ export class Enemy extends Entity {
         this.tileMap = tileMap;
     }
 
-    constructor(canvas: HTMLCanvasElement, gameHeight: number, speed: number, sprite: HTMLImageElement) {
+    constructor(canvas: HTMLCanvasElement, gameHeight: number, speed: number, sprite: HTMLImageElement, tileMap: TileMap | null = null) {
         const size = CONFIG.enemy.size;
-        const pos = calculateSpawnPosition(canvas.width, gameHeight, size, speed);
+        const pos = calculateSpawnPosition(canvas.width, gameHeight, size, speed, tileMap);
 
         super(pos.x, pos.y, size, size, CONFIG.enemy.color);
         this.vx = pos.vx;
@@ -83,6 +129,7 @@ export class Enemy extends Entity {
         this.frameTimer = 0;
         this.frameDelay = 10;
         this.direction = 0;
+        this.tileMap = tileMap;
     }
 
     update(delta: number): void {
