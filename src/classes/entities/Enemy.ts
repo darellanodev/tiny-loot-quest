@@ -97,14 +97,35 @@ export class Enemy extends Entity {
             return corners.some(c => this.tileMap!.isColliding(c.x, c.y));
         };
 
-        let newX = this.x + this.vx * delta;
-        let newY = this.y + this.vy * delta;
+        const tryChangeDirection = (): void => {
+            if (this.vx !== 0) {
+                const newVy = Math.random() < 0.5 ? Math.abs(this.vx) : -Math.abs(this.vx);
+                if (!checkCollision(this.x, this.y + newVy)) {
+                    this.vx = 0;
+                    this.vy = newVy;
+                }
+            } else if (this.vy !== 0) {
+                const newVx = Math.random() < 0.5 ? Math.abs(this.vy) : -Math.abs(this.vy);
+                if (!checkCollision(this.x + newVx, this.y)) {
+                    this.vy = 0;
+                    this.vx = newVx;
+                }
+            }
+        };
 
-        if (!checkCollision(newX, this.y)) {
-            this.x = newX;
+        const moveX = this.x + this.vx * delta;
+        const moveY = this.y + this.vy * delta;
+
+        if (checkCollision(moveX, this.y)) {
+            tryChangeDirection();
+        } else {
+            this.x = moveX;
         }
-        if (!checkCollision(this.x, newY)) {
-            this.y = newY;
+
+        if (checkCollision(this.x, moveY)) {
+            tryChangeDirection();
+        } else {
+            this.y = moveY;
         }
 
         if (this.vx > 0) this.direction = 2;
