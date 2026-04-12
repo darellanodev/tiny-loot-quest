@@ -44,6 +44,7 @@ export interface DifficultyConfig {
     base: number;
     increment: number;
     scorePerLevel: number;
+    spawnDecreasePerScore: number;
 }
 
 export interface CanvasConfig {
@@ -101,7 +102,7 @@ export const CONFIG: Config = {
     powerup: { size: 16, color: '#00ff88', spawnInterval: 600, shieldDuration: 300 },
     particle: { defaultCount: 10 },
     initialLives: 3,
-    difficulty: { base: 0.3, increment: 0.05, scorePerLevel: 5 },
+    difficulty: { base: 0.3, increment: 0.05, scorePerLevel: 5, spawnDecreasePerScore: 2 },
     ui: {
         font: "20px Arial",
         fontLarge: "40px Arial",

@@ -66,7 +66,7 @@ export class Spawner {
     this.enemyTimer += delta;
     if (
       this.enemyTimer >
-      Math.max(CONFIG.enemy.minSpawnInterval, CONFIG.enemy.baseSpawnInterval - score * 2)
+      Math.max(CONFIG.enemy.minSpawnInterval, CONFIG.enemy.baseSpawnInterval - score * CONFIG.difficulty.spawnDecreasePerScore)
     ) {
       this.spawnEnemy();
       this.enemyTimer = 0;
