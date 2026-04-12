@@ -200,7 +200,7 @@ type CreateUserRequest = Pick<User, "email" | "name">;
 
 Always verify the new code passes tests by running `pnpm run test`.
 
-Once done, propose a commit message in conventional commits format (e.g., `feat: description`). Do not create the commit — just show the suggested message so the user can commit manually.
+Once done, propose a commit message in conventional commits format (e.g., `feat: description`). Ask the user if they want to commit the changes. If yes, create the commit using `git add -A` and `git commit -m "message"`.
 
 ---
 

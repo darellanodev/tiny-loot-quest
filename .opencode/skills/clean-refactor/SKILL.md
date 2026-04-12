@@ -195,6 +195,6 @@ If a change could affect behavior, add one inline note: `// ⚠️ behavioral ch
 
 If the changes are large, list what you plan to do first and wait for confirmation.
 
-After completing a refactor, propose a commit message in conventional commits format (e.g., `refactor: description`). Do not create the commit — just show the suggested message so the user can commit manually.
+After completing a refactor, propose a commit message in conventional commits format (e.g., `refactor: description`). Ask the user if they want to commit the changes. If yes, create the commit using `git add -A` and `git commit -m "message"`.
 
 Always verify the refactored code passes tests by running `pnpm run test`.
