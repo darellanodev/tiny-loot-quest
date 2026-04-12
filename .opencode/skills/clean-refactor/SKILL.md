@@ -52,18 +52,139 @@ Improve how code is structured without changing what it does. Priority order:
 
 ### Complexity
 
-- Replace nested `if` blocks with early returns or small named functions
-- Replace magic numbers and strings with named constants
-- Replace `true/false` flags in function arguments with separate functions or option objects
-- Keep ternaries short; if they don't fit on one line, use an `if`
+#### Guard clauses
+
+Replace nested `if` blocks with early returns at the top. The happy path ends up at the bottom with no nesting.
+
+**Before** — nested conditions that force the reader to track multiple levels at once:
+
+```typescript
+function processOrder(order: Order) {
+  if (order) {
+    if (order.isPaid) {
+      if (order.items.length > 0) {
+        ship(order);
+      }
+    }
+  }
+}
+```
+
+**After** — each guard clause rejects one bad case; the happy path is clear:
+
+```typescript
+function processOrder(order: Order) {
+  if (!order) return;
+  if (!order.isPaid) return;
+  if (order.items.length === 0) return;
+  ship(order);
+}
+```
+
+#### Named constants
+
+Replace magic numbers and strings with named constants.
+
+#### Boolean flags
+
+Replace `true/false` flags in function arguments with separate functions or option objects.
+
+#### Ternaries
+
+Keep ternaries short. If they don't fit on one readable line, use an `if`.
 
 ### SOLID (use judgment, not religion)
 
-- **Single Responsibility**: one reason to change per function, class, or module
-- **Open/Closed**: add new behavior by extending, not by editing existing code
-- **Liskov**: subtypes should work anywhere their parent type is expected
-- **Interface Segregation**: don't make callers depend on things they don't use
-- **Dependency Inversion**: depend on abstractions at module boundaries, not on concrete classes
+#### Single Responsibility
+
+One reason to change per function, class, or module. The signal is needing "and" to describe what it does.
+
+**Before** — one function validates and saves; you can't test the validation without triggering the save:
+
+```typescript
+function saveUser(user: User) {
+  if (!user.email.includes("@")) throw new Error("Invalid email");
+  if (user.name.trim() === "") throw new Error("Name is required");
+  db.users.save(user);
+}
+```
+
+**After** — each function has one job:
+
+```typescript
+function validateUser(user: User) {
+  if (!user.email.includes("@")) throw new Error("Invalid email");
+  if (user.name.trim() === "") throw new Error("Name is required");
+}
+
+function saveUser(user: User) {
+  validateUser(user);
+  db.users.save(user);
+}
+```
+
+#### Open/Closed
+
+Add new behavior by extending, not by editing existing code. The signal is an `if` or `switch` that grows every time a new case appears.
+
+**Before** — adding a new discount type means editing this function:
+
+```typescript
+function getDiscount(userType: string): number {
+  if (userType === "premium") return 0.1;
+  if (userType === "vip") return 0.2;
+  return 0;
+}
+```
+
+**After** — new discount types are added without touching existing code:
+
+```typescript
+const DISCOUNTS: Record<string, number> = {
+  premium: 0.1,
+  vip: 0.2,
+};
+
+function getDiscount(userType: string): number {
+  return DISCOUNTS[userType] ?? 0;
+}
+```
+
+#### Liskov
+
+Subtypes should work anywhere their parent type is expected. Don't override a method in a way that surprises the caller.
+
+#### Interface Segregation
+
+Don't make callers depend on things they don't use. If an interface has methods that some implementations don't need, split it.
+
+#### Dependency Inversion
+
+Depend on abstractions at module boundaries, not on concrete classes. The signal is a class instantiating its own dependencies with `new` instead of receiving them.
+
+**Before** — `OrderService` creates its own mailer; impossible to test without sending real emails:
+
+```typescript
+class OrderService {
+  private mailer = new Mailer();
+
+  confirm(order: Order) {
+    this.mailer.send(order.email, "Confirmed");
+  }
+}
+```
+
+**After** — the mailer is injected; in tests you pass a fake one:
+
+```typescript
+class OrderService {
+  constructor(private mailer: Mailer) {}
+
+  confirm(order: Order) {
+    this.mailer.send(order.email, "Confirmed");
+  }
+}
+```
 
 ### Primitive Obsession and Value Objects
 
@@ -85,11 +206,9 @@ Note: if the concept has its own identity and life cycle (like a `User` or an `O
 function createUser(userId: string, email: string) {
   if (!email.includes("@")) throw new Error("Invalid email");
 }
-
 function updateEmail(userId: string, email: string) {
   if (!email.includes("@")) throw new Error("Invalid email");
 }
-
 createUser("alice@example.com", "usr_123");
 ```
 
@@ -98,17 +217,14 @@ createUser("alice@example.com", "usr_123");
 ```typescript
 class Email {
   private constructor(readonly value: string) {}
-
   static parse(raw: string): Email {
     if (!raw.includes("@")) throw new Error(`Invalid email: ${raw}`);
     return new Email(raw);
   }
-
   toString() {
     return this.value;
   }
 }
-
 function createUser(userId: string, email: Email) {
   /* ... */
 }
@@ -153,7 +269,6 @@ function calculateDiscount(total: number, userType: string): number {
   if (total > 100) return total * 0.95;
   return total;
 }
-
 class OrderService {
   async applyDiscount(orderId: string, userType: string) {
     const order = await this.db.orders.findById(orderId);
