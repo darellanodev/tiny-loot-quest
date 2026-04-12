@@ -31,21 +31,22 @@ export class AnimatedEntity extends Entity {
   update(): void {
     if (this.isAnimating) {
       this.frameTimer++;
-      if (this.frameTimer >= this.frameDelay) {
-        this.frameTimer = 0;
-        this.currentFrame++;
-        if (this.currentFrame >= this.sheetColumns) {
-          this.currentFrame = 0;
-          this.isAnimating = false;
-        }
-      }
-    } else {
-      this.waitTimer++;
-      if (this.waitTimer >= this.waitDelay) {
-        this.waitTimer = 0;
-        this.isAnimating = true;
-      }
+      if (this.frameTimer < this.frameDelay) return;
+
+      this.frameTimer = 0;
+      this.currentFrame++;
+      if (this.currentFrame < this.sheetColumns) return;
+
+      this.currentFrame = 0;
+      this.isAnimating = false;
+      return;
     }
+
+    this.waitTimer++;
+    if (this.waitTimer < this.waitDelay) return;
+
+    this.waitTimer = 0;
+    this.isAnimating = true;
   }
 
   draw(ctx: CanvasRenderingContext2D, offsetY: number = 0): void {
