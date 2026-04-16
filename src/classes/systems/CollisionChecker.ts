@@ -1,7 +1,7 @@
 import { TileMap } from "./TileMap.js";
 
 export class CollisionChecker {
-    setTileMap(tileMap: TileMap): void {}
+    setTileMap(_tileMap: TileMap): void {}
 
     checkEntityCollision(
         x: number,
