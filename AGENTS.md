@@ -116,3 +116,7 @@ All game constants live in `src/config.ts` as a typed `Config` interface + `CONF
 ## CI/CD (GitHub Actions)
 
 Push to `main` → pnpm install → `tsc --noEmit` → `vite build` → deploy `dist/` to GitHub Pages.
+
+## Maintenance
+
+Whenever making changes to the project, review this file and update it to stay coherent with the current state of the codebase.
