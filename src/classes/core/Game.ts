@@ -109,28 +109,30 @@ export class Game {
 
   drawPlayerCoords(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = CONFIG.ui.textColor;
-    ctx.font = CONFIG.ui.font;
+    ctx.font = CONFIG.ui.fontSmall;
     ctx.fillText(
       `Pos: ${Math.round(this.player.x)}, ${Math.round(this.player.y)}`,
       10,
-      this.hudHeight + CONFIG.ui.hudOffset.scoreY + 20,
+      this.hudHeight + 5,
     );
   }
 
   drawMouseCoords(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = CONFIG.ui.textColor;
-    ctx.font = CONFIG.ui.font;
+    ctx.font = CONFIG.ui.fontSmall;
+    ctx.textAlign = "right";
     ctx.fillText(
       `Mouse: ${Math.round(this.mouseX)}, ${Math.round(this.mouseY)}`,
-      10,
-      this.hudHeight + CONFIG.ui.hudOffset.scoreY + 40,
+      this.canvas.width - 10,
+      this.hudHeight + 5,
     );
+    ctx.textAlign = "left";
   }
 
   drawLives(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = CONFIG.ui.livesColor;
     ctx.font = CONFIG.ui.font;
-    ctx.fillText(this.gameState.lives, 17, this.hudHeight - 22);
+    ctx.fillText(String(this.gameState.lives), 18, this.hudHeight - 22);
   }
 
   drawGameOver(ctx: CanvasRenderingContext2D): void {

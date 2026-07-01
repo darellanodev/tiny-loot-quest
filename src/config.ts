@@ -83,6 +83,7 @@ export interface Config {
 
 export interface UIConfig {
     font: string;
+    fontSmall: string;
     fontLarge: string;
     textColor: string;
     livesColor: string;
@@ -121,6 +122,7 @@ export const CONFIG: Config = {
     difficulty: { base: 0.3, increment: 0.05, scorePerLevel: 5, spawnDecreasePerScore: 2 },
     ui: {
         font: "20px Arial",
+        fontSmall: "12px Arial",
         fontLarge: "40px Arial",
         textColor: "#fff",
         livesColor: "#ff6b6b",
