@@ -10,13 +10,14 @@ const ctx = canvas.getContext("2d")!;
 ctx.imageSmoothingEnabled = false;
 
 const imageManager = new ImageManager();
-const [hudImage, characterImage, skeletonImage, coinImage, powerupImage] = 
+const [hudImage, characterImage, skeletonImage, coinImage, powerupImage, heartImage] = 
   await imageManager.loadMultiple([
     new URL("./images/hud.png", import.meta.url).href,
     new URL("./images/character.png", import.meta.url).href,
     new URL("./images/skeleton.png", import.meta.url).href,
     new URL("./images/coin.png", import.meta.url).href,
     new URL("./images/powerup.png", import.meta.url).href,
+    new URL("./images/heart.png", import.meta.url).href,
   ]);
 
 const tileMap = await TileMap.load(
@@ -41,7 +42,8 @@ const game = new Game(
   HUD_HEIGHT,
   coinImage,
   skeletonImage,
-  powerupImage
+  powerupImage,
+  heartImage
 );
 
 const keys: Record<string, boolean> = {};

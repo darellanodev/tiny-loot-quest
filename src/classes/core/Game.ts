@@ -18,6 +18,7 @@ export class Game {
   gameState: GameState;
   private spawner: Spawner;
   private entityManager: EntityManager;
+  private heartImage: HTMLImageElement;
 
   constructor(
     player: Player,
@@ -28,12 +29,14 @@ export class Game {
     coinImage: HTMLImageElement,
     enemyImage: HTMLImageElement,
     powerupImage: HTMLImageElement,
+    heartImage: HTMLImageElement,
   ) {
     this.player = player;
     this.tileMap = tileMap;
     this.canvas = canvas;
     this.gameHeight = gameHeight;
     this.hudHeight = hudHeight;
+    this.heartImage = heartImage;
 
     this.gameState = new GameState();
     this.spawner = new Spawner(
@@ -130,9 +133,16 @@ export class Game {
   }
 
   drawLives(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = CONFIG.ui.livesColor;
-    ctx.font = CONFIG.ui.font;
-    ctx.fillText(String(this.gameState.lives), 18, this.hudHeight - 22);
+    const heartW = this.heartImage.naturalWidth;
+    const heartH = this.heartImage.naturalHeight;
+    const gap = 4;
+    for (let i = 0; i < this.gameState.lives; i++) {
+      ctx.drawImage(
+        this.heartImage,
+        18 + i * (heartW + gap),
+        this.hudHeight - 22 - heartH,
+      );
+    }
   }
 
   drawGameOver(ctx: CanvasRenderingContext2D): void {
