@@ -49,6 +49,11 @@ const keys: Record<string, boolean> = {};
 window.addEventListener("keydown", (e) => (keys[e.key] = true));
 window.addEventListener("keyup", (e) => (keys[e.key] = false));
 
+canvas.addEventListener("mousemove", (e) => {
+  game.mouseX = e.offsetX;
+  game.mouseY = e.offsetY - game.hudHeight;
+});
+
 window.addEventListener("keydown", (e) => {
   if (game.gameOver && e.key === " ") {
     game.restart();
@@ -66,6 +71,7 @@ function loop(currentTime: number): void {
   game.drawHud(ctx, hudImage);
   game.drawScore(ctx);
   game.drawPlayerCoords(ctx);
+  game.drawMouseCoords(ctx);
   game.drawLives(ctx);
   if (game.gameOver) {
     game.drawGameOver(ctx);

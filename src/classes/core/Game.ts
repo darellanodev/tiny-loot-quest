@@ -12,6 +12,9 @@ export class Game {
   hudHeight: number;
   gameHeight: number;
 
+  mouseX: number = 0;
+  mouseY: number = 0;
+
   gameState: GameState;
   private spawner: Spawner;
   private entityManager: EntityManager;
@@ -104,6 +107,12 @@ export class Game {
     ctx.fillStyle = CONFIG.ui.textColor;
     ctx.font = CONFIG.ui.font;
     ctx.fillText(`Pos: ${Math.round(this.player.x)}, ${Math.round(this.player.y)}`, 10, this.hudHeight + CONFIG.ui.hudOffset.scoreY + 20);
+  }
+
+  drawMouseCoords(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = CONFIG.ui.textColor;
+    ctx.font = CONFIG.ui.font;
+    ctx.fillText(`Mouse: ${Math.round(this.mouseX)}, ${Math.round(this.mouseY)}`, 10, this.hudHeight + CONFIG.ui.hudOffset.scoreY + 40);
   }
 
   drawLives(ctx: CanvasRenderingContext2D): void {
