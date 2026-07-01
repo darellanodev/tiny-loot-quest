@@ -6,12 +6,12 @@
 
 ## Commands
 
-| Command | Description |
-|---|---|
-| `pnpm run dev` | Start dev server with HMR |
-| `pnpm run build` | `tsc --noEmit && vite build` |
-| `pnpm test` | Run all Vitest tests |
-| `pnpm exec tsc --noEmit` | Type-check only |
+| Command                  | Description                  |
+| ------------------------ | ---------------------------- |
+| `pnpm run dev`           | Start dev server with HMR    |
+| `pnpm run build`         | `tsc --noEmit && vite build` |
+| `pnpm test`              | Run all Vitest tests         |
+| `pnpm exec tsc --noEmit` | Type-check only              |
 
 ## Project Structure
 
@@ -31,8 +31,8 @@ src/
 │   │   ├── Player.ts                # Input, tile-collision, 4-dir sprite
 │   │   ├── Enemy.ts                 # Edge-spawn, move inward, direction change
 │   │   ├── Coin.ts                  # Collectible (extends AnimatedEntity)
-│   │   ├── Powerup.ts              # Shield powerup (extends AnimatedEntity)
-│   │   └── Particle.ts             # Short-lived visual effect
+│   │   ├── Powerup.ts               # Shield powerup (extends AnimatedEntity)
+│   │   └── Particle.ts              # Short-lived visual effect
 │   └── systems/
 │       ├── TileMap.ts               # JSON + tileset loading, rendering, collision set
 │       ├── ImageManager.ts          # Promise-based image loading
@@ -97,6 +97,7 @@ All game constants live in `src/config.ts` as a typed `Config` interface + `CONF
 - **Pattern**: Export pure functions + test them; classes tested via their public API
 
 ### Existing tests:
+
 - `Entity.test.ts` — AABB collision
 - `PlayerMovement.test.ts` — `calculateMovement()` arrow/WASD keys
 - `TileMap.test.ts` — `isColliding()` tile coordinate calculation
@@ -112,10 +113,6 @@ All game constants live in `src/config.ts` as a typed `Config` interface + `CONF
 5. Add image loading in `main.ts` (pass to `Game` constructor)
 6. Add test in `tests/YourEntity.test.ts`
 7. Add sprite in `src/images/`
-
-## CI/CD (GitHub Actions)
-
-Push to `main` → pnpm install → `tsc --noEmit` → `vite build` → deploy `dist/` to GitHub Pages.
 
 ## Maintenance
 
