@@ -73,8 +73,12 @@ Particle (standalone, short-lived)
 4. `game.drawHud()`, `drawScore()`, `drawLives()`, `drawPlayerCoords()`
 5. `requestAnimationFrame(loop)` unless game over
 
-## Coding Conventions
+## Conventions
 
+- Write everything in English
+- Imperative present tense for commit messages, following Conventional Commits.
+- TDD encouraged: write failing test → implement → refactor
+- Comments are sparse; prefer self-documenting code
 - **Files**: PascalCase for classes (`Player.ts`), camelCase for utilities (`config.ts`, `main.ts`). Test files mirror source names (`PlayerMovement.test.ts`).
 - **Classes**: PascalCase, **named exports only** — no `export default`.
 - **Functions/Methods**: camelCase. Export pure functions alongside classes for testability.
@@ -96,7 +100,7 @@ All game constants live in `src/config.ts` as a typed `Config` interface + `CONF
 - **Mocking**: `vi.fn()`, `vi.spyOn()` for partial mocks
 - **Pattern**: Export pure functions + test them; classes tested via their public API
 
-### Existing tests:
+### Existing tests
 
 - `Entity.test.ts` — AABB collision
 - `PlayerMovement.test.ts` — `calculateMovement()` arrow/WASD keys
