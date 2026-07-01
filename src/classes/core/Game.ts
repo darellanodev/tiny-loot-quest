@@ -130,11 +130,7 @@ export class Game {
   drawLives(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = CONFIG.ui.livesColor;
     ctx.font = CONFIG.ui.font;
-    ctx.fillText(
-      "Lives: " + this.gameState.lives,
-      10,
-      this.hudHeight + CONFIG.ui.hudOffset.livesY,
-    );
+    ctx.fillText(this.gameState.lives, 17, this.hudHeight - 22);
   }
 
   drawGameOver(ctx: CanvasRenderingContext2D): void {
