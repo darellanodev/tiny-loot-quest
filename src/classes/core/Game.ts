@@ -100,25 +100,41 @@ export class Game {
   drawScore(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = CONFIG.ui.textColor;
     ctx.font = CONFIG.ui.font;
-    ctx.fillText("Score: " + this.gameState.score, 10, this.hudHeight + CONFIG.ui.hudOffset.scoreY);
+    ctx.fillText(
+      String(this.gameState.score).padStart(7, "0"),
+      223,
+      this.hudHeight - 21,
+    );
   }
 
   drawPlayerCoords(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = CONFIG.ui.textColor;
     ctx.font = CONFIG.ui.font;
-    ctx.fillText(`Pos: ${Math.round(this.player.x)}, ${Math.round(this.player.y)}`, 10, this.hudHeight + CONFIG.ui.hudOffset.scoreY + 20);
+    ctx.fillText(
+      `Pos: ${Math.round(this.player.x)}, ${Math.round(this.player.y)}`,
+      10,
+      this.hudHeight + CONFIG.ui.hudOffset.scoreY + 20,
+    );
   }
 
   drawMouseCoords(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = CONFIG.ui.textColor;
     ctx.font = CONFIG.ui.font;
-    ctx.fillText(`Mouse: ${Math.round(this.mouseX)}, ${Math.round(this.mouseY)}`, 10, this.hudHeight + CONFIG.ui.hudOffset.scoreY + 40);
+    ctx.fillText(
+      `Mouse: ${Math.round(this.mouseX)}, ${Math.round(this.mouseY)}`,
+      10,
+      this.hudHeight + CONFIG.ui.hudOffset.scoreY + 40,
+    );
   }
 
   drawLives(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = CONFIG.ui.livesColor;
     ctx.font = CONFIG.ui.font;
-    ctx.fillText("Lives: " + this.gameState.lives, 10, this.hudHeight + CONFIG.ui.hudOffset.livesY);
+    ctx.fillText(
+      "Lives: " + this.gameState.lives,
+      10,
+      this.hudHeight + CONFIG.ui.hudOffset.livesY,
+    );
   }
 
   drawGameOver(ctx: CanvasRenderingContext2D): void {
